@@ -7,23 +7,6 @@
 
     <!-- page specific plugin styles begins -->
     <hcss>
-        <!-- text fonts -->
-        <link rel="stylesheet" th:href="@{/assets/css/fonts.googleapis.com.css}"/>
-
-        <!-- ace styles -->
-        <link rel="stylesheet" th:href="@{/assets/css/ace.min.css}" class="ace-main-stylesheet" id="main-ace-style"/>
-        <!--[if lte IE 9]>
-        <link rel="stylesheet" th:href="@{/assets/css/ace-part2.min.css}" class="ace-main-stylesheet"/>
-        <![endif]-->
-        <link rel="stylesheet" th:href="@{/assets/css/ace-skins.min.css}"/>
-        <link rel="stylesheet" th:href="@{/assets/css/ace-rtl.min.css}"/>
-
-        <!--[if lte IE 9]>
-        <link rel="stylesheet" th:href="@{/assets/css/ace-ie.min.css}"/>
-        <![endif]-->
-
-        <!-- inline styles related to this page -->
-
         <!-- 使表格自动换行-->
         <style>
             .dynamic-table tr td {
@@ -36,15 +19,7 @@
 
     <!-- header specific plugin javascript begins-->
     <hjs>
-        <!-- ace settings handler -->
-        <script th:src="@{/assets/js/ace-extra.min.js}"></script>
 
-        <!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
-
-        <!--[if lte IE 8]>
-        <script th:src="@{/assets/js/html5shiv.min.js}"></script>
-        <script th:src="@{/assets/js/respond.min.js}"></script>
-        <![endif]-->
     </hjs>
     <!-- header specific plugin javascript ends-->
 </head>
@@ -56,24 +31,10 @@
         <ul class="breadcrumb">
             <li>
                 <i class="ace-icon fa fa-home home-icon"></i>
-                <a href="#">客户管理</a>
+                <a href="#">账户明细</a>
             </li>
-            <li>
-                <a href="#">客户预览</a>
-            </li>
-            <li class="active">客户结欠预览
-            </li>
+            <li class="active">农商行（公账）</li>
         </ul><!-- /.breadcrumb -->
-
-        <div class="nav-search" id="nav-search">
-            <form class="form-search">
-                <span class="input-icon">
-                    <input type="text" placeholder="Search ..." class="nav-search-input"
-                           id="nav-search-input" autocomplete="off"/>
-                    <i class="ace-icon fa fa-search nav-search-icon"></i>
-                </span>
-            </form>
-        </div><!-- /.nav-search -->
     </div>
 </bc>
 <!-- BREADCRUMBS ENDS -->
@@ -86,10 +47,6 @@
                 <!-- PAGE CONTENT BEGINS -->
                 <div class="row">
                     <div class="col-xs-12">
-                        <h3 class="header smaller lighter blue">jQuery dataTables</h3>
-                        <div class="clearfix">
-                            <div class="pull-right tableTools-container"></div>
-                        </div>
                         <div class="table-header">
                             账户明细-苏州农村商业银行（公账）
                         </div>
@@ -97,97 +54,8 @@
 
                         <!-- div.dataTables_borderWrap -->
                         <div>
-                            <table id="dynamic-table" class="table table-striped table-bordered table-hover">
-                                <thead>
-                                <tr>
-                                    <th class="center">
-                                        <label class="pos-rel">
-                                            <input type="checkbox" class="ace"/>
-                                            <span class="lbl"></span>
-                                        </label>
-                                    </th>
-                                    <th>凭据编号</th>
-                                    <th>日期</th>
-                                    <th>类别</th>
-                                    <th>货主</th>
-                                    <th>摘要</th>
-                                    <th>货款金额</th>
-                                    <th>备注</th>
-                                    <th>操作</th>
-                                </tr>
-                                </thead>
-
-                                <tbody>
-                                <tr>
-                                    <td class="center">
-                                        <label class="pos-rel">
-                                            <input type="checkbox" class="ace"/>
-                                            <span class="lbl"></span>
-                                        </label>
-                                    </td>
-                                    <td>0000001</td>
-                                    <td>2019/01/01</td>
-                                    <td>客户</td>
-                                    <td>赵振</td>
-                                    <td>集装箱*3个</td>
-                                    <td>10000.00</td>
-                                    <td>吃葡萄不吐葡萄皮，不吃葡萄倒吐葡萄皮，吃葡萄不吐葡萄皮，不吃葡萄倒吐葡萄皮</td>
-                                    <td>
-                                        <div class="hidden-sm hidden-xs action-buttons">
-                                            <a class="blue" href="#">
-                                                <i class="ace-icon fa fa-search-plus bigger-130"></i>
-                                            </a>
-
-                                            <a class="green" href="#">
-                                                <i class="ace-icon fa fa-pencil bigger-130"></i>
-                                            </a>
-
-                                            <a class="red" href="#">
-                                                <i class="ace-icon fa fa-trash-o bigger-130"></i>
-                                            </a>
-                                        </div>
-
-                                        <div class="hidden-md hidden-lg">
-                                            <div class="inline pos-rel">
-                                                <button class="btn btn-minier btn-yellow dropdown-toggle"
-                                                        data-toggle="dropdown" data-position="auto">
-                                                    <i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
-                                                </button>
-
-                                                <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
-                                                    <li>
-                                                        <a href="#" class="tooltip-info" data-rel="tooltip"
-                                                           title="View">
-																				<span class="blue">
-																					<i class="ace-icon fa fa-search-plus bigger-120"></i>
-																				</span>
-                                                        </a>
-                                                    </li>
-
-                                                    <li>
-                                                        <a href="#" class="tooltip-success" data-rel="tooltip"
-                                                           title="Edit">
-																				<span class="green">
-																					<i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
-																				</span>
-                                                        </a>
-                                                    </li>
-
-                                                    <li>
-                                                        <a href="#" class="tooltip-error" data-rel="tooltip"
-                                                           title="Delete">
-																				<span class="red">
-																					<i class="ace-icon fa fa-trash-o bigger-120"></i>
-																				</span>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
+                            <table id="szrcb-details-table"
+                                   class="table table-striped table-bordered table-hover"></table>
                         </div>
                     </div>
                 </div>
@@ -275,193 +143,6 @@
 </pc>
 <!-- PAGE CONTENT ENDS -->
 
-<div class="container-fluid">
-    <div class="row-fluid">
-        <div class="span2" id="sidebar">
-            <ul class="nav nav-list bs-docs-sidenav nav-collapse collapse">
-                <li>
-                    <a href="index.html"><i class="icon-chevron-right"></i> 首页</a>
-                </li>
-                <li>
-                    <a href="calendar.html"><i class="icon-chevron-right"></i> 日历</a>
-                </li>
-                <li>
-                    <a href="stats.html"><i class="icon-chevron-right"></i> 统计图表</a>
-                </li>
-                <li>
-                    <a href="form.html"><i class="icon-chevron-right"></i> 表单</a>
-                </li>
-                <li class="active">
-                    <a href="tables.html"><i class="icon-chevron-right"></i> 表格</a>
-                </li>
-                <li>
-                    <a href="buttons.html"><i class="icon-chevron-right"></i> 按钮 & 图标</a>
-                </li>
-                <li>
-                    <a href="editors.html"><i class="icon-chevron-right"></i> 编辑器</a>
-                </li>
-                <li>
-                    <a href="interface.html"><i class="icon-chevron-right"></i> UI界面</a>
-                </li>
-                <li>
-                    <a href="#"><span class="badge badge-success pull-right">731</span> 订单</a>
-                </li>
-                <li>
-                    <a href="#"><span class="badge badge-success pull-right">812</span> 清单</a>
-                </li>
-                <li>
-                    <a href="#"><span class="badge badge-info pull-right">27</span> 客户</a>
-                </li>
-                <li>
-                    <a href="#"><span class="badge badge-info pull-right">1,234</span> 用户</a>
-                </li>
-                <li>
-                    <a href="#"><span class="badge badge-info pull-right">2,221</span> 消息</a>
-                </li>
-                <li>
-                    <a href="#"><span class="badge badge-info pull-right">11</span> 报告</a>
-                </li>
-                <li>
-                    <a href="#"><span class="badge badge-important pull-right">83</span> 错误</a>
-                </li>
-                <li>
-                    <a href="#"><span class="badge badge-warning pull-right">4,231</span> 日志</a>
-                </li>
-            </ul>
-        </div>
-        <!--/span-->
-        <div class="span10" id="container-content">
-            <div class="row-fluid">
-                <!-- block -->
-                <div class="block">
-                    <div class="navbar navbar-inner block-header">
-                        <div class="muted pull-left">账户流水明细/苏州农村商业银行（公账）</div>
-                    </div>
-                    <div class="block-content collapse in">
-                        <div class="span12">
-                            <table cellspacing="0" width="100%"
-                                   class="able table-striped table-bordered table-hover table-condensed"
-                                   id="szrcb-details-table">
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <!-- /block -->
-            </div>
-        </div>
-    </div>
-    <hr>
-    <footer>
-        <p>&copy; BootAdmin 2013</p>
-    </footer>
-</div>
-<!--/.fluid-container-->
-
-<!-- 模态框（Modal） -->
-<div class="modal fade" id="query-or-edit-details-modal" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">查询明细详情</h4>
-            </div>
-            <div class="modal-body">
-                <div class="container-fluid">
-                    <form role="form" class="form-horizontal">
-                        <div class="form-group">
-                            <label for="documentSeq" class="col-sm-2 control-label">票据所在本数：</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="documentSeq" placeholder="请输入票据所在本数"
-                                       readonly="readonly">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="documentNo" class="col-sm-2 control-label">票据编号：</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="documentNo" placeholder="请输入票据编号"
-                                       readonly="readonly">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="documentDate" class="col-sm-2 control-label">票据日期：</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="documentDate" placeholder="请输入票据日期"
-                                       readonly="readonly">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="category" class="col-sm-2 control-label">类别：</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="category" placeholder="请输入票据类别"
-                                       readonly="readonly">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="user" class="col-sm-2 control-label">用户：</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="user" placeholder="请输入用户"
-                                       readonly="readonly">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="content" class="col-sm-2 control-label">摘要：</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="content" placeholder="请输入凭据摘要"
-                                       readonly="readonly">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="income" class="col-sm-2 control-label">收入：</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="income" placeholder="请输入凭据收入"
-                                       readonly="readonly">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="expense" class="col-sm-2 control-label">支出：</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="expense" placeholder="请输入凭据支出"
-                                       readonly="readonly">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="counterpartyInformation" class="col-sm-2 control-label">对方信息：</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="counterpartyInformation"
-                                       placeholder="请输入对方信息" readonly="readonly">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="paymentType" class="col-sm-2 control-label">付款方式：</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="paymentType" placeholder="请输入付款方式"
-                                       readonly="readonly">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="remark" class="col-sm-2 control-label">备注：</label>
-                            <div class="col-sm-10">
-                                <textarea class="form-control" id="remark" rows="5" readonly="readonly"></textarea>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="file" class="col-sm-2 control-label">凭据文件：</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="file" placeholder="请输入凭据文件">
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary">提交更改</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal -->
-</div>
-
 <!-- body page specific plugin scripts BEGINS-->
 <bjs>
     <!-- page specific plugin scripts -->
@@ -475,12 +156,9 @@
     <script th:src="@{/assets/js/buttons.colVis.min.js}"></script>
     <script th:src="@{/assets/js/dataTables.select.min.js}"></script>
 
-    <!-- ace scripts -->
-    <script th:src="@{/assets/js/ace-elements.min.js}"></script>
-    <script th:src="@{/assets/js/ace.min.js}"></script>
-
     <!-- inline scripts related to this page -->
     <script th:inline="javascript">
+        /*<![CDATA[*/
         $("#szrcb-details-table").dataTable($.extend(true, {}, CONSTANT.DATA_TABLES.DEFAULT_OPTION, {
             "ajax": function (data, callback, settings) {
                 const pageSize = data.length;
@@ -505,14 +183,14 @@
                 });
             },
             "columns": [
-                {"data": "documentSeq", "title": "本数", "width": "30px"},
-                {"data": "documentNo", "title": "编号", "width": "50px"},
-                {"data": "documentDate", "title": "日期", "width": "70px"},
-                {"data": "category.name", "title": "类别", "width": "30px"},
-                {"data": "user.name", "title": "用户", "width": "50px"},
-                {"data": "content", "title": "摘要", "width": "200px"},
+                {"data": "documentSeq", "title": "本数", "width": "45px"},
+                {"data": "documentNo", "title": "编号", "width": "80px"},
+                {"data": "documentDate", "title": "日期", "width": "100px"},
+                {"data": "category.name", "title": "类别", "width": "50px"},
+                {"data": "user.name", "title": "用户", "width": "80px"},
+                {"data": "content", "title": "摘要", "width": "250px"},
                 {
-                    "data": "income", "title": "收入", "width": "60px",
+                    "data": "income", "title": "收入", "width": "90px",
                     "render": function (data, type, row) {
                         if (type === "display" || type === "filter") {
                             if (data === 0) {
@@ -524,7 +202,7 @@
                     }
                 },
                 {
-                    "data": "expense", "title": "支出", "width": "60px",
+                    "data": "expense", "title": "支出", "width": "90px",
                     "render": function (data, type, row) {
                         if (type === "display" || type === "filter") {
                             if (data === 0) {
@@ -535,9 +213,9 @@
                         }
                     }
                 },
-                {"data": "counterpartyInformation", "title": "对方信息", "width": "150px"},
-                {"data": "paymentType.name", "title": "付款信息", "width": "30px"},
-                {"data": null, "title": "操作", "width": "150px"},
+                {"data": "counterpartyInformation", "title": "对方信息", "width": "250px"},
+                {"data": "paymentType.name", "title": "付款信息", "width": "100px"},
+                {"data": null, "title": "操作", "width": "100px"},
             ],
             "columnDefs": [
                 {
@@ -545,88 +223,21 @@
                     "render": function (data, type, row, meta) {
                         uri = /*[[@{/details}]]*/ "";
 
-                        return '<ul class="operation">\n' +
-                            '<li><a href="javascript:void(0);" onclick="query(' + data.id + ')">详情</a></li> | <li>编辑</li> | <li>删除</li>'
-                        '</ul>';
+                        return '<div class="hidden-sm hidden-xs action-buttons">\n' +
+                            '<a class="blue" href="javascript:void(0);"  onclick="query(' + data.id + ')">' +
+                            '<i class="ace-icon fa fa-search-plus bigger-130"></i>' +
+                            '</a>' +
+                            '<a class="green" href="javascript:void(0);">' +
+                            '<i class="ace-icon fa fa-pencil bigger-130"></i>' +
+                            '</a>' +
+                            '<a class="red" href="javascript:void(0);">' +
+                            '<i class="ace-icon fa fa-trash-o bigger-130"></i>' +
+                            '</a>' +
+                            '</div>';
                     }
                 }
             ]
         }));
-
-        /*<![CDATA[*/
-        $(function () {
-            $("#szrcb-details-table").dataTable($.extend(true, {}, CONSTANT.DATA_TABLES.DEFAULT_OPTION, {
-                "ajax": function (data, callback, settings) {
-                    const pageSize = data.length;
-                    const page = data.start / data.length + 1;
-                    $.ajax({
-                        type: "GET",
-                        url:/*[[@{/details}]]*/ "",
-                        data: {
-                            page: page,
-                            pageSize: pageSize
-                        },
-                        dataType: "json",
-                        success: function (result) {
-                            if (result.code === 70001) {
-                                callback({
-                                    recordsTotal: result.data.total,
-                                    recordsFiltered: result.data.total,
-                                    data: result.data.content
-                                });
-                            }
-                        }
-                    });
-                },
-                "columns": [
-                    {"data": "documentSeq", "title": "本数", "width": "30px"},
-                    {"data": "documentNo", "title": "编号", "width": "50px"},
-                    {"data": "documentDate", "title": "日期", "width": "70px"},
-                    {"data": "category.name", "title": "类别", "width": "30px"},
-                    {"data": "user.name", "title": "用户", "width": "50px"},
-                    {"data": "content", "title": "摘要", "width": "200px"},
-                    {
-                        "data": "income", "title": "收入", "width": "60px",
-                        "render": function (data, type, row) {
-                            if (type === "display" || type === "filter") {
-                                if (data === 0) {
-                                    return "";
-                                } else {
-                                    return data.toFixed(2);
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "data": "expense", "title": "支出", "width": "60px",
-                        "render": function (data, type, row) {
-                            if (type === "display" || type === "filter") {
-                                if (data === 0) {
-                                    return "";
-                                } else {
-                                    return data.toFixed(2);
-                                }
-                            }
-                        }
-                    },
-                    {"data": "counterpartyInformation", "title": "对方信息", "width": "150px"},
-                    {"data": "paymentType.name", "title": "付款信息", "width": "30px"},
-                    {"data": null, "title": "操作", "width": "150px"},
-                ],
-                "columnDefs": [
-                    {
-                        "targets": 10,
-                        "render": function (data, type, row, meta) {
-                            uri = /*[[@{/details}]]*/ "";
-
-                            return '<ul class="operation">\n' +
-                                '<li><a href="javascript:void(0);" onclick="query(' + data.id + ')">详情</a></li> | <li>编辑</li> | <li>删除</li>'
-                            '</ul>';
-                        }
-                    }
-                ]
-            }));
-        });
 
         function query(id) {
             $.ajax({

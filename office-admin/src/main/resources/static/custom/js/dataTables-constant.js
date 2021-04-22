@@ -27,9 +27,9 @@ const CONSTANT = {
             stripeClasses: ['strip1', 'strip2', 'strip3'],
             autoWidth: false,
             processing: true,
-            destroy: false,
             rowId: "id",
             serverSide: true,
+            destroy:true
         },
         COLUMN: {
             // 复选框
