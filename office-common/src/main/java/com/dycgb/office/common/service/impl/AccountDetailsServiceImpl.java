@@ -16,6 +16,7 @@ import com.dycgb.office.common.service.UserService;
 import com.dycgb.office.common.utils.ErrorCodeEnum;
 import com.dycgb.office.common.utils.Pager;
 import com.dycgb.office.common.utils.excel.AccountDetailsExcelListener;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -67,15 +68,25 @@ public class AccountDetailsServiceImpl implements AccountDetailsService {
     /**
      * 分页查询账户流水明细
      *
-     * @param page     第 page 页
-     * @param pageSize 每页大小
+     * @param page          第 page 页
+     * @param pageSize      每页大小
+     * @param paymentTypeId 付款方式
      * @return 分页列表
      */
     @Override
-    public Pager<AccountDetails> findAccountDetailsByPage(Integer page, Integer pageSize) {
+    public Pager<AccountDetails> findAccountDetailsByPage(Integer page, Integer pageSize, Long paymentTypeId) {
         page = page > 0 ? page - 1 : 0;
         PageRequest pageable = PageRequest.of(page, pageSize, Sort.by("id"));
-        Page<AccountDetails> p = accountDetailsRepository.findAll(pageable);
+        Page<AccountDetails> p;
+        if (paymentTypeId == 0) {
+            p = accountDetailsRepository.findAll(pageable);
+        } else {
+            PaymentType paymentType = new PaymentType();
+            paymentType.setId(paymentTypeId);
+            AccountDetails accountDetails = AccountDetails.builder().paymentType(paymentType).build();
+            Example<AccountDetails> example = Example.of(accountDetails);
+            p = accountDetailsRepository.findAll(example, pageable);
+        }
         return new Pager<>(page == 0 ? 1 : page + 1, p.getSize(), pageable.getOffset(), p.getTotalPages(), p.hasNext(), p.getContent(), p.getTotalElements());
     }
 

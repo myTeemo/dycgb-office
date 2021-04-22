@@ -3,17 +3,19 @@ package com.dycgb.office.admin.controller;
 import com.dycgb.office.common.exception.ResourceAlreadyExistException;
 import com.dycgb.office.common.exception.ResourceNotFoundException;
 import com.dycgb.office.common.model.AccountDetails;
+import com.dycgb.office.common.model.PaymentType;
 import com.dycgb.office.common.service.AccountDetailsService;
-import com.dycgb.office.common.utils.CustomResponse;
-import com.dycgb.office.common.utils.ErrorCodeEnum;
-import com.dycgb.office.common.utils.PageConstants;
-import com.dycgb.office.common.utils.Pager;
+import com.dycgb.office.common.service.PaymentTypeService;
+import com.dycgb.office.common.utils.*;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 
 /**
  * @Description 账户流水明细管理控制器
@@ -23,20 +25,30 @@ import java.io.IOException;
 @Controller
 @RequestMapping("/details")
 public class AccountDetailsController {
-
-
     @Resource
     private AccountDetailsService accountDetailsService;
+    @Resource
+    private PaymentTypeService paymentTypeService;
 
     @Resource
     private PageConstants pageConstants;
 
+    @Resource
+    private FileConstants fileConstants;
+
     /**
-     * 登月流水明细查询页面
+     * 流水明细查询页面
      */
-    @GetMapping("/page/szrcb")
-    public String DyPublic() {
-        return "account-details/szrcb";
+    @GetMapping("/page")
+    public String page(@RequestParam("pid") Long paymentTypeId, Model model) {
+
+        if (paymentTypeId == 0) {
+            model.addAttribute("paymentType", new PaymentType(paymentTypeId, "流水总账"));
+        } else {
+            PaymentType paymentType = paymentTypeService.findPaymentTypeById(paymentTypeId);
+            model.addAttribute("paymentType", paymentType);
+        }
+        return "account-details/account-details";
     }
 
     /**
@@ -64,12 +76,13 @@ public class AccountDetailsController {
     @GetMapping
     @ResponseBody
     public CustomResponse findAccountDetailsByPage(@RequestParam(value = "page", defaultValue = "1") Integer page,
-                                                   @RequestParam(value = "pageSize", defaultValue = "20") Integer pageSize) {
+                                                   @RequestParam(value = "pageSize", defaultValue = "20") Integer pageSize,
+                                                   @RequestParam(value = "payId", defaultValue = "0") Long paymentTypeId) {
         if (pageSize == null) {
             pageSize = pageConstants.getPageSize();
         }
 
-        Pager<AccountDetails> accountDetailsList = accountDetailsService.findAccountDetailsByPage(page, pageSize);
+        Pager<AccountDetails> accountDetailsList = accountDetailsService.findAccountDetailsByPage(page, pageSize, paymentTypeId);
         return CustomResponse.OK(ErrorCodeEnum.ACCOUNT_DETAILS_QUERY_OK, accountDetailsList);
     }
 
@@ -127,7 +140,7 @@ public class AccountDetailsController {
      *
      * @param file excel文件
      */
-    @PostMapping("/upload")
+    @PostMapping("/excel/upload")
     @ResponseBody
     public CustomResponse excelUpload(@RequestParam("file") MultipartFile file) {
         try {
@@ -138,6 +151,36 @@ public class AccountDetailsController {
         } catch (ResourceNotFoundException re) {
             return CustomResponse.FAILED(re.getCode(), re.getMessage());
         }
+    }
 
+    @PostMapping("/img/upload")
+    @ResponseBody
+    public CustomResponse imgUpload(@RequestParam("img") MultipartFile img,
+                                    @RequestParam("id") Long id,
+                                    @RequestParam("documentNo") String documentNo) {
+        AccountDetails accountDetails = accountDetailsService.findAccountDetailsById(id);
+        if (accountDetails.getDocumentNo().equals(documentNo)) {
+            String formatDocumentDate = accountDetails.getDocumentDate().replace("/", "");
+
+            String fileName = String.format("%s-%s-%s-%s-%s-%s",
+                    accountDetails.getDocumentSeq(),
+                    accountDetails.getDocumentNo(),
+                    formatDocumentDate,
+                    accountDetails.getUser().getName(),
+                    accountDetails.getContent(),
+                    accountDetails.getIncome().compareTo(BigDecimal.ZERO) == 0 ? accountDetails.getExpense() : accountDetails.getIncome());
+            File nImg = new File(fileConstants.getAccountDetailsPath() + fileName + img.getOriginalFilename().substring(img.getOriginalFilename().lastIndexOf(".")));
+
+            accountDetails.setFilePath(nImg.getPath());
+            accountDetailsService.updateAccountDetails(accountDetails);
+
+            try {
+                img.transferTo(nImg);
+                return CustomResponse.OK(ErrorCodeEnum.ACCOUNT_DETAILS_IMG_UPLOAD_OK);
+            } catch (IOException ioe) {
+                return CustomResponse.FAILED(ErrorCodeEnum.ACCOUNT_DETAILS_IMG_UPLOAD_FAILED_IO_EXCEPTION);
+            }
+        }
+        return CustomResponse.FAILED(ErrorCodeEnum.ACCOUNT_DETAILS_IMG_UPLOAD_FAILED_PARAMETERS_ILLEGAL);
     }
 }

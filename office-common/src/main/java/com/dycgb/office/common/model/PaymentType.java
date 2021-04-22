@@ -27,4 +27,9 @@ public class PaymentType extends AbstractBaseEntity {
      */
     @Column(nullable = false)
     private String name;
+
+    public PaymentType(Long id, String name) {
+        setId(id);
+        this.name = name;
+    }
 }

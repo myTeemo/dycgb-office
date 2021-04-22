@@ -443,17 +443,15 @@
 
                 <ul class="submenu">
                     <li class="">
-                        <a href="#">
+                        <a th:href="@{/details/page?pid=0}">
+                            流水总账 </a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="" th:each="paymentType: ${paymentTypes}">
+                        <a th:href="@{/details/page(pid=${paymentType.id})}" th:text="${paymentType.name}">
                             <i class="menu-icon fa fa-caret-right"></i>
                             农商行（公账）
                             <b class="arrow fa fa-angle-down"></b>
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li class="">
-                        <a href="#">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            建设银行
                         </a>
                         <b class="arrow"></b>
                     </li>

@@ -2,6 +2,12 @@ dycgb:
     office:
         page:
             pageSize: 20
+        file:
+            path:
+                base: /Users/myhe/IdeaProjects/dycgb/files/
+                account-details: ${dycgb.office.file.path.base}account-details/
+                goods: ${dycgb.office.file.path.base}goods/
+                invoices: ${dycgb.office.file.path.base}invoices/
 spring:
     datasource:
         url: jdbc:mysql://127.0.0.1:3306/dycgb_office?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=false&serverTimezone=Asia/Shanghai

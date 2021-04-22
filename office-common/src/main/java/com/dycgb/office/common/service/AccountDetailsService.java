@@ -23,7 +23,7 @@ public interface AccountDetailsService {
 
     List<AccountDetails> createAccountDetails(List<ExcelAccountDetails> excelAccountDetailsList);
 
-    Pager<AccountDetails> findAccountDetailsByPage(Integer page, Integer pageSize);
+    Pager<AccountDetails> findAccountDetailsByPage(Integer page, Integer pageSize, Long paymentTypeId);
 
     AccountDetails updateAccountDetails(AccountDetails accountDetails);
 
