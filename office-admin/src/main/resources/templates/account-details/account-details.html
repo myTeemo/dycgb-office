@@ -14,6 +14,7 @@
                 height: auto;
             }
         </style>
+        <link th:href="@{/custom/css/image-light-box.css}" rel="stylesheet" type="text/css">
     </hcss>
     <!-- page specific plugin styles ends-->
 
@@ -167,13 +168,12 @@
                                                for="file">凭据文件</label>
                                         <div class="col-sm-9">
                                             <a href="#" class="ace-thumbnails">
-                                                <img width="150" height="150" alt="150x150" src="" />
+                                                <img width="200" height="100" alt="200x100" src="" id="file"/>
                                             </a>
                                         </div>
                                     </div>
                                 </form>
                             </div>
-
                             <div class="modal-footer no-margin-top">
                                 <button class="btn btn-sm btn-danger pull-left" data-dismiss="modal">
                                     <i class="ace-icon fa fa-times"></i>
@@ -183,10 +183,25 @@
                         </div><!-- /.modal-content -->
                     </div><!-- /.modal-dialog -->
                 </div>
+
+                <!-- 缩略图点击放大-->
+                <div id="imgLightbox" onclick="imgLightbox.close();">
+                    <div id="imgLightbox-button-area">
+                        <a title="open in new window and close" id="imgLightbox-button-newwindow">
+                            <span class="imgLightbox-button">&UpperRightArrow;</span>
+                        </a>
+                        <a title="download and close" id="imgLightbox-button-download">
+                            <span class="imgLightbox-button">&DownArrowBar;</span>
+                        </a>
+                        <span title="close" class="imgLightbox-button" onclick="imgLightbox.close();">&Cross;</span>
+                    </div>
+                </div>
                 <!-- PAGE CONTENT ENDS -->
             </div><!-- /.col -->
         </div><!-- /.row -->
     </div><!-- /.page-content -->
+
+
 </pc>
 <!-- PAGE CONTENT ENDS -->
 
@@ -202,6 +217,7 @@
     <script th:src="@{/assets/js/buttons.print.min.js}"></script>
     <script th:src="@{/assets/js/buttons.colVis.min.js}"></script>
     <script th:src="@{/assets/js/dataTables.select.min.js}"></script>
+    <script th:src="@{/custom/js/image-light-box.js}"></script>
 
     <!-- inline scripts related to this page -->
     <script th:inline="javascript">
@@ -307,12 +323,13 @@
                         $('#category').val(data.category.name);
                         $('#user').val(data.user.name);
                         $('#paymentType').val(data.paymentType.name);
+                        $('#file').attr('src', (/*[[@{/details/file}]]*/ "") + "/" + id)
+                            .attr('onclick', "imgLightbox.open('" + (/*[[@{/details/file}]]*/ "") + "/" + id + "', true);");
 
                         console.log(result.data);
                     }
                 }
             });
-
         };
         /*]]>*/
     </script>

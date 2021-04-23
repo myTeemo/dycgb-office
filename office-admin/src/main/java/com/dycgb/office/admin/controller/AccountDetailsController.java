@@ -7,14 +7,21 @@ import com.dycgb.office.common.model.PaymentType;
 import com.dycgb.office.common.service.AccountDetailsService;
 import com.dycgb.office.common.service.PaymentTypeService;
 import com.dycgb.office.common.utils.*;
+import org.hibernate.result.Output;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 
 /**
@@ -153,6 +160,13 @@ public class AccountDetailsController {
         }
     }
 
+    /**
+     * 上传凭证文件
+     *
+     * @param img        图片
+     * @param id         记录ID
+     * @param documentNo 凭证编号
+     */
     @PostMapping("/img/upload")
     @ResponseBody
     public CustomResponse imgUpload(@RequestParam("img") MultipartFile img,
@@ -169,9 +183,11 @@ public class AccountDetailsController {
                     accountDetails.getUser().getName(),
                     accountDetails.getContent(),
                     accountDetails.getIncome().compareTo(BigDecimal.ZERO) == 0 ? accountDetails.getExpense() : accountDetails.getIncome());
-            File nImg = new File(fileConstants.getAccountDetailsPath() + fileName + img.getOriginalFilename().substring(img.getOriginalFilename().lastIndexOf(".")));
+            String suffix = img.getOriginalFilename().substring(img.getOriginalFilename().lastIndexOf("."));
+            fileName += suffix;
+            File nImg = new File(fileConstants.getAccountDetailsPath() + fileName);
 
-            accountDetails.setFilePath(nImg.getPath());
+            accountDetails.setFileName(fileName);
             accountDetailsService.updateAccountDetails(accountDetails);
 
             try {
@@ -182,5 +198,28 @@ public class AccountDetailsController {
             }
         }
         return CustomResponse.FAILED(ErrorCodeEnum.ACCOUNT_DETAILS_IMG_UPLOAD_FAILED_PARAMETERS_ILLEGAL);
+    }
+
+    @GetMapping("/file/{id}")
+    public void getFile(@PathVariable("id") Long id, HttpServletResponse response) throws IOException {
+        AccountDetails accountDetails = accountDetailsService.findAccountDetailsById(id);
+        String fileName = accountDetails.getFileName();
+
+        if (fileName != null) {
+            OutputStream os = null;
+            try {
+                BufferedImage image = ImageIO.read(new FileInputStream(new File(fileConstants.getAccountDetailsPath() + fileName)));
+                response.setContentType("image/jpeg");
+                os = response.getOutputStream();
+                if (image != null) {
+                    ImageIO.write(image, "jpeg", os);
+                }
+            } finally {
+                if (os != null) {
+                    os.flush();
+                    os.close();
+                }
+            }
+        }
     }
 }

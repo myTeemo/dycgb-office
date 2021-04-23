@@ -89,8 +89,8 @@ public class AccountDetails extends AbstractBaseEntity {
     private String remark;
 
     /**
-     * 凭证文件路径
+     * 凭证文件名称
      */
     @Column
-    private String filePath;
+    private String fileName;
 }
