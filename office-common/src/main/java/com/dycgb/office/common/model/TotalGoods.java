@@ -1,8 +1,6 @@
 package com.dycgb.office.common.model;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -20,6 +18,8 @@ import java.math.BigDecimal;
 @Table(name = "total_goods")
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class TotalGoods extends AbstractBaseEntity {
 

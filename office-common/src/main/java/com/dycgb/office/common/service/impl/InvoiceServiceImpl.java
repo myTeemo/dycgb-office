@@ -82,6 +82,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         List<Invoice> invoices = new ArrayList<>();
         for (ExcelInvoice excelInvoice : excelInvoiceList) {
             Invoice invoice = excelInvoice.converter();
+            invoice.setType((byte) 1);
             String userName = invoice.getUser().getName();
             String buyerName = invoice.getBuyer().getName();
             String sellerName = invoice.getSeller().getName();

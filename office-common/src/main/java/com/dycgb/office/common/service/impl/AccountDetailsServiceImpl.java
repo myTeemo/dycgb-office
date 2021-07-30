@@ -1,6 +1,7 @@
 package com.dycgb.office.common.service.impl;
 
 import com.alibaba.excel.EasyExcel;
+import com.dycgb.office.common.exception.ParametersIllegalException;
 import com.dycgb.office.common.exception.ResourceAlreadyExistException;
 import com.dycgb.office.common.exception.ResourceNotFoundException;
 import com.dycgb.office.common.model.AccountDetails;
@@ -13,7 +14,9 @@ import com.dycgb.office.common.service.AccountDetailsService;
 import com.dycgb.office.common.service.CategoryService;
 import com.dycgb.office.common.service.PaymentTypeService;
 import com.dycgb.office.common.service.UserService;
+import com.dycgb.office.common.utils.CustomResponse;
 import com.dycgb.office.common.utils.ErrorCodeEnum;
+import com.dycgb.office.common.utils.FileConstants;
 import com.dycgb.office.common.utils.Pager;
 import com.dycgb.office.common.utils.excel.AccountDetailsExcelListener;
 import org.springframework.data.domain.Example;
@@ -26,7 +29,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -44,6 +49,9 @@ public class AccountDetailsServiceImpl implements AccountDetailsService {
     private PaymentTypeService paymentTypeService;
     @Resource
     private UserService userService;
+
+    @Resource
+    private FileConstants fileConstants;
 
     private Map<String, Category> categoriesMap = new HashMap<>();
     private Map<String, PaymentType> paymentTypesMap = new HashMap<>();
@@ -213,5 +221,30 @@ public class AccountDetailsServiceImpl implements AccountDetailsService {
             throw new ResourceNotFoundException(ErrorCodeEnum.ACCOUNT_DETAILS_EXCEL_UPLOAD_FAILED_EXCEL_NOT_FOUND);
         }
         EasyExcel.read(file.getInputStream(), ExcelAccountDetails.class, new AccountDetailsExcelListener(this)).sheet().doRead();
+    }
+
+    @Override
+    public AccountDetails imageUpload(MultipartFile img, Long id, String documentNo) throws IOException {
+        AccountDetails oAccountDetails = findAccountDetailsById(id);
+        if (oAccountDetails.getDocumentNo().equals(documentNo)) {
+            String formatDocumentDate = oAccountDetails.getDocumentDate().replace("/", "");
+
+            String fileName = String.format("%s-%s-%s-%s-%s-%s",
+                    oAccountDetails.getDocumentSeq(),
+                    oAccountDetails.getDocumentNo(),
+                    formatDocumentDate,
+                    oAccountDetails.getUser().getName(),
+                    oAccountDetails.getContent(),
+                    oAccountDetails.getIncome().compareTo(BigDecimal.ZERO) == 0 ? oAccountDetails.getExpense() : oAccountDetails.getIncome());
+            String suffix = img.getOriginalFilename().substring(img.getOriginalFilename().lastIndexOf("."));
+            fileName += suffix;
+            File nImg = new File(fileConstants.getAccountDetailsPath() + fileName);
+
+            oAccountDetails.setFileName(fileName);
+            AccountDetails nAccountDetails = updateAccountDetails(oAccountDetails);
+            img.transferTo(nImg);
+            return nAccountDetails;
+        }
+        throw new ParametersIllegalException(ErrorCodeEnum.ACCOUNT_DETAILS_IMG_UPLOAD_FAILED_PARAMETERS_ILLEGAL);
     }
 }

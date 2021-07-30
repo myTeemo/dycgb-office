@@ -89,7 +89,7 @@ public class Invoice extends AbstractBaseEntity {
     private User user;
 
     /**
-     * 发票类别 1 开出 2 开出
+     * 发票类别 1 开出 2 开入
      */
     @Column
     private byte type;

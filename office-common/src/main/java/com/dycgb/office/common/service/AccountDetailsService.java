@@ -30,4 +30,6 @@ public interface AccountDetailsService {
     boolean deleteAccountDetailsById(Long id);
 
     void readAccountDetailsExcel(MultipartFile file) throws IOException;
+
+    AccountDetails imageUpload(MultipartFile img, Long id, String documentNo) throws IOException;
 }

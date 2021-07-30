@@ -1,5 +1,6 @@
 package com.dycgb.office.admin.controller;
 
+import com.dycgb.office.common.exception.ParametersIllegalException;
 import com.dycgb.office.common.exception.ResourceAlreadyExistException;
 import com.dycgb.office.common.exception.ResourceNotFoundException;
 import com.dycgb.office.common.model.AccountDetails;
@@ -7,22 +8,14 @@ import com.dycgb.office.common.model.PaymentType;
 import com.dycgb.office.common.service.AccountDetailsService;
 import com.dycgb.office.common.service.PaymentTypeService;
 import com.dycgb.office.common.utils.*;
-import org.hibernate.result.Output;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.math.BigDecimal;
 
 /**
  * @Description 账户流水明细管理控制器
@@ -43,6 +36,9 @@ public class AccountDetailsController {
     @Resource
     private FileConstants fileConstants;
 
+    @Resource
+    private ImageUtils imageUtils;
+
     /**
      * 流水明细查询页面
      */
@@ -55,7 +51,7 @@ public class AccountDetailsController {
             PaymentType paymentType = paymentTypeService.findPaymentTypeById(paymentTypeId);
             model.addAttribute("paymentType", paymentType);
         }
-        return "account-details/account-details";
+        return "account-details";
     }
 
     /**
@@ -117,9 +113,23 @@ public class AccountDetailsController {
      */
     @PutMapping
     @ResponseBody
-    public CustomResponse updateAccountDetails(AccountDetails accountDetails) {
+    public CustomResponse updateAccountDetails(AccountDetails accountDetails, MultipartFile file) {
+
         try {
+            // 更新除 文件外其他信息
             AccountDetails updatedAccountDetails = accountDetailsService.updateAccountDetails(accountDetails);
+            if (file != null) {
+                try {
+                    // 更新凭证图片
+                    AccountDetails nAccountDetails = accountDetailsService.imageUpload(file, updatedAccountDetails.getId(), updatedAccountDetails.getDocumentNo());
+
+                    updatedAccountDetails.setFileName(nAccountDetails.getFileName());
+                } catch (IOException ioe) {
+                    return CustomResponse.FAILED(ErrorCodeEnum.ACCOUNT_DETAILS_IMG_UPLOAD_FAILED_IO_EXCEPTION);
+                } catch (ParametersIllegalException pie) {
+                    return CustomResponse.FAILED(pie.getCode(), pie.getMessage());
+                }
+            }
             return CustomResponse.OK(ErrorCodeEnum.ACCOUNT_DETAILS_UPDATE_OK, updatedAccountDetails);
         } catch (ResourceNotFoundException re) {
             return CustomResponse.FAILED(re.getCode(), re.getMessage());
@@ -169,35 +179,17 @@ public class AccountDetailsController {
      */
     @PostMapping("/img/upload")
     @ResponseBody
-    public CustomResponse imgUpload(@RequestParam("img") MultipartFile img,
-                                    @RequestParam("id") Long id,
-                                    @RequestParam("documentNo") String documentNo) {
-        AccountDetails accountDetails = accountDetailsService.findAccountDetailsById(id);
-        if (accountDetails.getDocumentNo().equals(documentNo)) {
-            String formatDocumentDate = accountDetails.getDocumentDate().replace("/", "");
-
-            String fileName = String.format("%s-%s-%s-%s-%s-%s",
-                    accountDetails.getDocumentSeq(),
-                    accountDetails.getDocumentNo(),
-                    formatDocumentDate,
-                    accountDetails.getUser().getName(),
-                    accountDetails.getContent(),
-                    accountDetails.getIncome().compareTo(BigDecimal.ZERO) == 0 ? accountDetails.getExpense() : accountDetails.getIncome());
-            String suffix = img.getOriginalFilename().substring(img.getOriginalFilename().lastIndexOf("."));
-            fileName += suffix;
-            File nImg = new File(fileConstants.getAccountDetailsPath() + fileName);
-
-            accountDetails.setFileName(fileName);
-            accountDetailsService.updateAccountDetails(accountDetails);
-
-            try {
-                img.transferTo(nImg);
-                return CustomResponse.OK(ErrorCodeEnum.ACCOUNT_DETAILS_IMG_UPLOAD_OK);
-            } catch (IOException ioe) {
-                return CustomResponse.FAILED(ErrorCodeEnum.ACCOUNT_DETAILS_IMG_UPLOAD_FAILED_IO_EXCEPTION);
-            }
+    public CustomResponse imageUpload(@RequestParam("img") MultipartFile img,
+                                      @RequestParam("id") Long id,
+                                      @RequestParam("documentNo") String documentNo) {
+        try {
+            AccountDetails accountDetails = accountDetailsService.imageUpload(img, id, documentNo);
+            return CustomResponse.OK(ErrorCodeEnum.ACCOUNT_DETAILS_IMG_UPLOAD_OK, accountDetails.getFileName());
+        } catch (IOException ioe) {
+            return CustomResponse.FAILED(ErrorCodeEnum.ACCOUNT_DETAILS_IMG_UPLOAD_FAILED_IO_EXCEPTION);
+        } catch (ParametersIllegalException pie) {
+            return CustomResponse.FAILED(pie.getCode(), pie.getMessage());
         }
-        return CustomResponse.FAILED(ErrorCodeEnum.ACCOUNT_DETAILS_IMG_UPLOAD_FAILED_PARAMETERS_ILLEGAL);
     }
 
     @GetMapping("/file/{id}")
@@ -206,20 +198,7 @@ public class AccountDetailsController {
         String fileName = accountDetails.getFileName();
 
         if (fileName != null) {
-            OutputStream os = null;
-            try {
-                BufferedImage image = ImageIO.read(new FileInputStream(new File(fileConstants.getAccountDetailsPath() + fileName)));
-                response.setContentType("image/jpeg");
-                os = response.getOutputStream();
-                if (image != null) {
-                    ImageIO.write(image, "jpeg", os);
-                }
-            } finally {
-                if (os != null) {
-                    os.flush();
-                    os.close();
-                }
-            }
+            imageUtils.readImage(response.getOutputStream(), fileConstants.getAccountDetailsPath() + fileName);
         }
     }
 }

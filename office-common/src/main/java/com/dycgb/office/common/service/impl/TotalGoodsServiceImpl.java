@@ -13,6 +13,7 @@ import com.dycgb.office.common.service.ProductService;
 import com.dycgb.office.common.service.TotalGoodsService;
 import com.dycgb.office.common.service.UserService;
 import com.dycgb.office.common.utils.ErrorCodeEnum;
+import com.dycgb.office.common.utils.Pager;
 import com.dycgb.office.common.utils.excel.TotalGoodsExcelListener;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -121,4 +122,16 @@ public class TotalGoodsServiceImpl implements TotalGoodsService {
 
         return totalGoodsRepository.saveAll(totalGoodsList);
     }
+
+    /**
+     * 分页查询流水发货明细
+     *
+     * @param page     第 page 页
+     * @param pageSize 页大小
+     */
+    @Override
+    public Pager<TotalGoods> findTotalGoodsByPage(Integer page, Integer pageSize) {
+        return null;
+    }
+
 }

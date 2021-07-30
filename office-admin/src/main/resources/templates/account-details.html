@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- title begins-->
+    <title>登月钢构|流水账户明细</title>
+    <!-- title ends-->
+
+    <!-- page specific plugin styles begins -->
+    <hcss>
+        <!-- 使表格自动换行-->
+        <style>
+            .dynamic-table tr td {
+                /*white-space: normal !important;*/
+                height: auto;
+            }
+        </style>
+        <link th:href="@{/custom/css/image-light-box.css}" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" th:href="@{/assets/css/jquery-ui.custom.min.css}"/>
+        <link rel="stylesheet" th:href="@{/assets/css/jquery.gritter.min.css}"/>
+        <link rel="stylesheet" th:href="@{/assets/css/jquery-ui.min.css}"/>
+    </hcss>
+    <!-- page specific plugin styles ends-->
+
+    <!-- header specific plugin javascript begins-->
+    <hjs>
+
+    </hjs>
+    <!-- header specific plugin javascript ends-->
+</head>
+<body>
+
+<!-- BREADCRUMBS BEGINS -->
+<bc>
+    <div class="breadcrumbs ace-save-state" id="breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="ace-icon fa fa-home home-icon"></i>
+                <a href="#">账户明细</a>
+            </li>
+            <li class="active">[[${paymentType.name}]]</li>
+        </ul><!-- /.breadcrumb -->
+    </div>
+</bc>
+<!-- BREADCRUMBS ENDS -->
+
+<!-- PAGE CONTENT BEGINS -->
+<pc>
+    <div class="page-content">
+        <div class="row">
+            <div class="col-xs-12">
+                <!-- PAGE CONTENT BEGINS -->
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="table-header">
+                            账户明细-[[${paymentType.name}]]
+                        </div>
+                        <!-- div.table-responsive -->
+
+                        <!-- div.dataTables_borderWrap -->
+                        <div>
+                            <table id="szrcb-details-table"
+                                   class="table table-striped table-bordered table-hover"></table>
+                        </div>
+                    </div>
+                </div>
+
+                <!--查询明细详情模态框-->
+                <div id="query-details-modal" class="modal fade" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header no-padding">
+                                <div class="table-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                        <span class="white">&times;</span>
+                                    </button>
+                                    凭据详情
+                                </div>
+                            </div>
+
+                            <div class="modal-body no-padding">
+                                <form class="form-horizontal" role="form">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right"
+                                               for="documentSeq">凭据本数</label>
+                                        <div class="col-sm-9">
+                                            <input readonly="" type="text" class="col-xs-10"
+                                                   id="documentSeq"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right"
+                                               for="documentNo">凭据编号</label>
+                                        <div class="col-sm-9">
+                                            <input readonly="" type="text" class="col-xs-10"
+                                                   id="documentNo"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right"
+                                               for="documentDate">凭据日期</label>
+                                        <div class="col-sm-9">
+                                            <input readonly="" type="text" class="col-xs-10"
+                                                   id="documentDate"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right"
+                                               for="content">摘要</label>
+                                        <div class="col-sm-9">
+                                            <input readonly="" type="text" class="col-xs-10"
+                                                   id="content"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right"
+                                               for="income">收入</label>
+                                        <div class="col-sm-9">
+                                            <input readonly="" type="text" class="col-xs-10"
+                                                   id="income"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right"
+                                               for="expense">支出</label>
+                                        <div class="col-sm-9">
+                                            <input readonly="" type="text" class="col-xs-10"
+                                                   id="expense"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right"
+                                               for="counterpartyInformation">对方信息</label>
+                                        <div class="col-sm-9">
+                                            <input readonly="" type="text" class="col-xs-10"
+                                                   id="counterpartyInformation"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right"
+                                               for="remark">备注</label>
+                                        <div class="col-sm-9">
+                                            <textarea class="col-xs-10" id="remark" readonly="" rows="3"
+                                                      cols="30"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right"
+                                               for="category">类别</label>
+                                        <div class="col-sm-9">
+                                            <input readonly="" type="text" class="col-xs-10"
+                                                   id="category"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right"
+                                               for="user">用户</label>
+                                        <div class="col-sm-9">
+                                            <input readonly="" type="text" class="col-xs-10"
+                                                   id="user"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right"
+                                               for="paymentType">付款方式</label>
+                                        <div class="col-sm-9">
+                                            <input readonly="" type="text" class="col-xs-10"
+                                                   id="paymentType"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right"
+                                               for="file">凭据文件</label>
+                                        <div class="col-sm-9">
+                                            <a href="#" class="ace-thumbnails">
+                                                <img width="200" height="100" alt="200x100" src="" id="file"/>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer no-margin-top">
+                                <button class="btn btn-sm btn-danger pull-left" data-dismiss="modal">
+                                    <i class="ace-icon fa fa-times"></i>
+                                    关闭
+                                </button>
+                            </div>
+                        </div><!-- /.modal-content -->
+                    </div><!-- /.modal-dialog -->
+                </div>
+
+                <!--修改明细详情模态框-->
+                <div id="edit-details-modal" class="modal fade" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header no-padding">
+                                <div class="table-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                        <span class="white">&times;</span>
+                                    </button>
+                                    编辑明细
+                                </div>
+                            </div>
+
+                            <div class="modal-body no-padding">
+                                <form class="form-horizontal" role="form">
+                                    <input type="hidden" id="eId"/>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right"
+                                               for="eDocumentSeq">凭据本数</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="col-xs-10"
+                                                   id="eDocumentSeq"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right"
+                                               for="eDocumentNo">凭据编号</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="col-xs-10"
+                                                   id="eDocumentNo"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right"
+                                               for="eDocumentDate">凭据日期</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="col-xs-10"
+                                                   id="eDocumentDate"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right"
+                                               for="eContent">摘要</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="col-xs-10"
+                                                   id="eContent"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right"
+                                               for="eIncome">收入</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="col-xs-10"
+                                                   id="eIncome"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right"
+                                               for="eExpense">支出</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="col-xs-10"
+                                                   id="eExpense"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right"
+                                               for="eCounterpartyInformation">对方信息</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="col-xs-10"
+                                                   id="eCounterpartyInformation"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right"
+                                               for="eRemark">备注</label>
+                                        <div class="col-sm-9">
+                                            <textarea class="col-xs-10" id="eRemark" rows="3"
+                                                      cols="30"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right"
+                                               for="eCategory">类别</label>
+                                        <div class="col-sm-9">
+                                            <select class="chosen-select col-xs-10" id="eCategory"
+                                                    onchange="queryUsersByCategory()"
+                                                    data-placeholder="请选择分类"></select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right"
+                                               for="eUser">用户</label>
+                                        <div class="col-sm-9">
+                                            <select class="chosen-select col-xs-10" id="eUser"
+                                                    data-placeholder="请选择用户"></select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right"
+                                               for="ePaymentType">付款方式</label>
+                                        <div class="col-sm-9">
+                                            <select class="chosen-select col-xs-10" id="ePaymentType"
+                                                    data-placeholder="请选择付款方式"></select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right"
+                                               for="eFile">凭据文件</label>
+                                        <div class="col-sm-9">
+                                            <a href="#" class="ace-thumbnails">
+                                                <img width="200" height="100" alt="200x100" src="" id="eFile"/>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right"
+                                               for="eFile-input">重新上传凭证</label>
+                                        <div class="col-sm-7">
+                                            <input type="file" class="col-xs-10" id="eFile-input"/>
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
+                            <div class="modal-footer no-margin-top">
+                                <button class="btn btn-sm btn-success" onclick="submitUpdateDetails()">
+                                    <i class="ace-icon fa fa-check"></i>提交更改
+                                </button>&nbsp;
+                                <button class="btn btn-sm btn-danger" data-dismiss="modal">
+                                    <i class="ace-icon fa fa-times"></i>关闭
+                                </button>
+                            </div>
+                        </div><!-- /.edit modal-content -->
+
+                        <div id="delete-confirm" class="hide">
+                            <div class="space-6"></div>
+                            <p class="bigger-110 bolder center grey">
+                                <i class="ace-icon fa fa-hand-o-right blue bigger-120"></i>
+                                真的删除？
+                            </p>
+                        </div><!-- #dialog-confirm -->
+                    </div><!-- /.modal-dialog -->
+                </div>
+
+                <!-- 缩略图点击放大-->
+                <div id="imgLightbox" onclick="imgLightbox.close();">
+                    <div id="imgLightbox-button-area">
+                        <a title="open in new window and close" id="imgLightbox-button-newwindow">
+                            <span class="imgLightbox-button">&UpperRightArrow;</span>
+                        </a>
+                        <a title="download and close" id="imgLightbox-button-download">
+                            <span class="imgLightbox-button">&DownArrowBar;</span>
+                        </a>
+                        <span title="close" class="imgLightbox-button" onclick="imgLightbox.close();">&Cross;</span>
+                    </div>
+                </div>
+                <!-- PAGE CONTENT ENDS -->
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.page-content -->
+</pc>
+<!-- PAGE CONTENT ENDS -->
+
+<!-- body page specific plugin scripts BEGINS-->
+<bjs>
+    <!-- page specific plugin scripts -->
+    <script th:src="@{/assets/js/jquery.dataTables.min.js}"></script>
+    <script th:src="@{/assets/js/jquery.dataTables.bootstrap.min.js}"></script>
+    <script th:src="@{/custom/js/dataTables-constant.js}"></script>
+    <script th:src="@{/assets/js/dataTables.buttons.min.js}"></script>
+    <script th:src="@{/assets/js/buttons.flash.min.js}"></script>
+    <script th:src="@{/assets/js/buttons.html5.min.js}"></script>
+    <script th:src="@{/assets/js/buttons.print.min.js}"></script>
+    <script th:src="@{/assets/js/buttons.colVis.min.js}"></script>
+    <script th:src="@{/assets/js/dataTables.select.min.js}"></script>
+    <script th:src="@{/assets/js/jquery.gritter.min.js}"></script>
+    <script th:src="@{/custom/js/image-light-box.js}"></script>
+    <script th:src="@{/assets/js/jquery-ui.min.js}"></script>
+    <script th:src="@{/assets/js/jquery.ui.touch-punch.min.js}"></script>
+    <script th:src="@{/custom/js/query.js}"></script>
+    <script th:src="@{/custom/js/update.js}"></script>
+
+    <!-- inline scripts related to this page -->
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        $("#szrcb-details-table").dataTable($.extend(true, {}, CONSTANT.DATA_TABLES.DEFAULT_OPTION, {
+            "ajax": function (data, callback, settings) {
+                const pageSize = data.length;
+                const page = data.start / data.length + 1;
+                $.ajax({
+                    type: "GET",
+                    url:/*[[@{/details}]]*/ "",
+                    data: {
+                        page: page,
+                        pageSize: pageSize,
+                        payId: /*[[${paymentType.id}]]*/ 0
+                    },
+                    dataType: "json",
+                    success: function (result) {
+                        if (result.code === 70001) {
+                            callback({
+                                recordsTotal: result.data.total,
+                                recordsFiltered: result.data.total,
+                                data: result.data.content
+                            });
+                        }
+                    }
+                });
+            },
+            "columns": [
+                {"data": "documentSeq", "title": "本数", "width": "45px"},
+                {"data": "documentNo", "title": "编号", "width": "80px"},
+                {"data": "documentDate", "title": "日期", "width": "100px"},
+                {"data": "category.name", "title": "类别", "width": "50px"},
+                {"data": "user.name", "title": "用户", "width": "80px"},
+                {"data": "content", "title": "摘要", "width": "250px"},
+                {
+                    "data": "income", "title": "收入", "width": "90px",
+                    "render": function (data, type, row) {
+                        if (type === "display" || type === "filter") {
+                            if (data === 0) {
+                                return "";
+                            } else {
+                                return data.toFixed(2);
+                            }
+                        }
+                    }
+                },
+                {
+                    "data": "expense", "title": "支出", "width": "90px",
+                    "render": function (data, type, row) {
+                        if (type === "display" || type === "filter") {
+                            if (data === 0) {
+                                return "";
+                            } else {
+                                return data.toFixed(2);
+                            }
+                        }
+                    }
+                },
+                {"data": "counterpartyInformation", "title": "对方信息", "width": "250px"},
+                {"data": "paymentType.name", "title": "付款信息", "width": "100px"},
+                {"data": null, "title": "操作", "width": "100px"},
+            ],
+            "columnDefs": [
+                {
+                    "targets": 10,
+                    "render": function (data, type, row, meta) {
+                        uri = /*[[@{/details}]]*/ "";
+
+                        return '<div class="hidden-sm hidden-xs action-buttons">\n' +
+                            '<a class="blue" href="javascript:void(0);"  onclick="query(' + data.id + ')">' +
+                            '<i class="ace-icon fa fa-search-plus bigger-130"></i>' +
+                            '</a>' +
+                            '<a class="green" href="javascript:void(0);" onclick="edit(' + data.id + ')">' +
+                            '<i class="ace-icon fa fa-pencil bigger-130"></i>' +
+                            '</a>' +
+                            '<a class="red" href="javascript:void(0);" onclick="deleteDetails(' + data.id + ')">' +
+                            '<i class="ace-icon fa fa-trash-o bigger-130"></i>' +
+                            '</a>' +
+                            '</div>';
+                    }
+                }
+            ]
+        }));
+
+        function query(id) {
+            $.ajax({
+                url: (/*[[@{/details}]]*/ "") + "/" + id,
+                type: 'GET',
+                dataType: 'JSON',
+                success: function (result) {
+                    if (result.code === 70001) {
+                        $('#query-details-modal').modal();
+                        data = result.data;
+                        $('#documentSeq').val(data.documentSeq);
+                        $('#documentNo').val(data.documentNo);
+                        $('#documentDate').val(data.documentDate);
+                        $('#content').val(data.content);
+                        $('#income').val(data.income);
+                        $('#expense').val(data.expense);
+                        $('#counterpartyInformation').val(data.counterpartyInformation);
+                        $('#remark').val(data.remark);
+                        $('#category').val(data.category.name);
+                        $('#user').val(data.user.name);
+                        $('#paymentType').val(data.paymentType.name);
+                        $('#file').attr('src', (/*[[@{/details/file}]]*/ "") + "/" + id)
+                            .attr('onclick', "imgLightbox.open('" + (/*[[@{/details/file}]]*/ "") + "/" + id + "', true);");
+                    }
+                }
+            });
+        }
+
+        //override dialog's title function to allow for HTML titles
+        $.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
+            _title: function (title) {
+                var $title = this.options.title || '&nbsp;'
+                if (("title_html" in this.options) && this.options.title_html == true)
+                    title.html($title);
+                else title.text($title);
+            }
+        }));
+
+        function edit(id) {
+            $.ajax({
+                url: (/*[[@{/details/}]]*/ "") + id,
+                type: 'GET',
+                dataType: 'JSON',
+                success: function (result) {
+                    var option;
+                    if (result.code === 70001) {
+                        $('#edit-details-modal').modal();
+                        data = result.data;
+                        $('#eId').val(data.id);
+                        $('#eDocumentSeq').val(data.documentSeq);
+                        $('#eDocumentNo').val(data.documentNo);
+                        $('#eDocumentDate').val(data.documentDate);
+                        $('#eContent').val(data.content);
+                        $('#eIncome').val(data.income);
+                        $('#eExpense').val(data.expense);
+                        $('#eCounterpartyInformation').val(data.counterpartyInformation);
+                        $('#eRemark').val(data.remark);
+
+                        let categories = queryCategories(/*[[@{/category}]]*/ "");
+                        $("#eCategory").empty().append($("<option>"));
+                        for (let category of categories) {
+                            let option = $("<option>").val(category.id).text(category.name);
+                            $('#eCategory').append(option);
+                        }
+                        $('#eCategory option').filter(function () {
+                            return $(this).text() === data.category.name;
+                        }).attr("selected", true);
+
+                        let users = queryUsers(/*[[@{/user}]]*/ "", {category_id: data.category.id});
+                        $("#eUser").empty().append($("<option>"));
+                        for (let user of users) {
+                            let option = $("<option>").val(user.id).text(user.name);
+                            $('#eUser').append(option);
+                        }
+                        $('#eUser option').filter(function () {
+                            return $(this).text() === data.user.name;
+                        }).attr("selected", true);
+
+                        let paymentTypes = queryPaymentTypes(/*[[@{/paymentType}]]*/ "",);
+                        $("#ePaymentType").empty().append($("<option>"));
+                        for (let paymentType of paymentTypes) {
+                            let option = $("<option>").val(paymentType.id).text(paymentType.name);
+                            $('#ePaymentType').append(option);
+                        }
+                        $('#ePaymentType option').filter(function () {
+                            return $(this).text() === data.paymentType.name;
+                        }).attr("selected", true);
+
+                        $('#eFile').attr('src', (/*[[@{/details/file}]]*/ "") + "/" + id)
+                            .attr('onclick', "imgLightbox.open('" + (/*[[@{/details/file}]]*/ "") + "/" + id + "', true);");
+                    }
+                }
+            });
+        }
+
+        function deleteDetails(id) {
+            $("#delete-confirm").removeClass('hide').dialog({
+                resizable: false,
+                width: '320',
+                modal: true,
+                title: "<div class='widget-header'><h4 class='smaller'><i class='ace-icon fa fa-exclamation-triangle red'></i>删除账户明细</h4></div>",
+                title_html: true,
+                buttons: [
+                    {
+                        html: "<i class='ace-icon fa fa-trash-o bigger-110'></i>&nbsp; 确定",
+                        "class": "btn btn-danger btn-minier",
+                        click: function () {
+                            let result = deleteDetailsById((/*[[@{/details/}]]*/ "")+id, 'DELETE');
+                            $(this).dialog("close");
+
+                            $.gritter.add({
+                                title: result.code + '-' + result.message,
+                                text: result.message,
+                                class_name: 'gritter-success gritter-light'
+                            });
+
+                            setTimeout(function () {
+                                window.location.reload();
+                            },2000);
+                        }
+                    },
+                    {
+                        html: "<i class='ace-icon fa fa-times bigger-110'></i>&nbsp; 取消",
+                        "class": "btn btn-minier",
+                        click: function () {
+                            $(this).dialog("close");
+                        }
+                    }
+                ]
+            });
+        }
+
+        function queryUsersByCategory() {
+            let categoryId = $('#eCategory').val();
+            let users = queryUsers(/*[[@{/user}]]*/ "", {category_id: categoryId});
+            $("#eUser").empty().append($("<option>"));
+            for (let user of users) {
+                let option = $("<option>").val(user.id).text(user.name);
+                $('#eUser').append(option);
+            }
+        }
+
+        function submitUpdateDetails() {
+            let formData = new FormData();
+            formData.append('id', $('#eId').val());
+            formData.append('documentSeq', $('#eDocumentSeq').val());
+            formData.append('documentNo', $('#eDocumentNo').val());
+            formData.append('documentDate', $('#eDocumentDate').val());
+            formData.append('category', $('#eCategory option:selected').val());
+            formData.append('user', $('#eUser option:selected').val());
+            formData.append('content', $('#eContent').val());
+            formData.append('income', $('#eIncome').val());
+            formData.append('expense', $('#eExpense').val());
+            formData.append('counterpartyInformation', $('#eCounterpartyInformation').val());
+            formData.append('paymentType', $('#ePaymentType option:selected').val());
+            formData.append('remark', $('#remark').val());
+            formData.append('file', document.getElementById('eFile-input').files[0]);
+
+            let result = updateDetails(/*[[@{/details}]]*/ "", 'PUT', formData);
+
+            $.gritter.add({
+                title: result.code + '-' + result.message,
+                text: result.message,
+                class_name: 'gritter-success gritter-light'
+            });
+            $('#edit-details-modal').modal('hide');
+
+            setTimeout(function () {
+                window.location.reload();
+            },2000);
+        }
+
+        $('#eFile-input').ace_file_input({
+            no_file: '无文件',
+            btn_choose: '重新选择',
+            btn_change: '更换凭证',
+            droppable: false,
+            onchange: null,
+            thumbnail: false, //| true | large
+            whitelist: 'gif|png|jpg|jpeg'
+            //blacklist:'exe|php'
+            //onchange:''
+            //
+        });
+        /*]]>*/
+    </script>
+</bjs>
+<!-- body page specific plugin scripts ENDS-->
+</body>
+
+</html>
