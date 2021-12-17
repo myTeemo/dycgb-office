@@ -1,4 +1,4 @@
-function updateDetails(url, method, params) {
+function updateTemplate(url, method, params) {
     let result = {};
     $.ajax({
         url: url,
@@ -14,12 +14,12 @@ function updateDetails(url, method, params) {
     return result;
 }
 
-function deleteDetailsById(url, method) {
+function deleteTemplate(url, method) {
 
-    return deleteDetailsById(url, method, {});
+    return deleteTemplate(url, method, {});
 }
 
-function deleteDetailsById(url, method, params) {
+function deleteTemplate(url, method, params) {
     let result = {};
     $.ajax({
         url: url,

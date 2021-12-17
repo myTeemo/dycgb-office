@@ -1,6 +1,7 @@
 package com.dycgb.office.common.service.impl;
 
 import com.alibaba.excel.EasyExcel;
+import com.dycgb.office.common.exception.ParametersIllegalException;
 import com.dycgb.office.common.exception.ResourceNotFoundException;
 import com.dycgb.office.common.model.Category;
 import com.dycgb.office.common.model.Product;
@@ -13,17 +14,21 @@ import com.dycgb.office.common.service.ProductService;
 import com.dycgb.office.common.service.TotalGoodsService;
 import com.dycgb.office.common.service.UserService;
 import com.dycgb.office.common.utils.ErrorCodeEnum;
+import com.dycgb.office.common.utils.FileConstants;
 import com.dycgb.office.common.utils.Pager;
 import com.dycgb.office.common.utils.excel.TotalGoodsExcelListener;
+import com.sun.istack.internal.NotNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Description 流水发货业务实现类
@@ -42,6 +47,8 @@ public class TotalGoodsServiceImpl implements TotalGoodsService {
     private ProductService productService;
     @Resource
     private CategoryService categoryService;
+    @Resource
+    private FileConstants fileConstants;
 
     private final Map<String, User> usersMap = new HashMap<>();
     private final Map<String, Product> productsMap = new HashMap<>();
@@ -131,7 +138,78 @@ public class TotalGoodsServiceImpl implements TotalGoodsService {
      */
     @Override
     public Pager<TotalGoods> findTotalGoodsByPage(Integer page, Integer pageSize) {
-        return null;
+        page = page > 0 ? page - 1 : 0;
+        PageRequest pageable = PageRequest.of(page, pageSize, Sort.by("id"));
+        Page<TotalGoods> p = totalGoodsRepository.findAll(pageable);
+
+        return new Pager<>(page == 0 ? 1 : page + 1, p.getSize(), pageable.getOffset(), p.getTotalPages(), p.hasNext(), p.getContent(), p.getTotalElements());
     }
 
+    /**
+     * 根据ID查询发货记录
+     *
+     * @param id 发货ID
+     * @return 查询结果
+     */
+    @Override
+    public TotalGoods findTotalGoodsById(@NonNull Long id) {
+        Optional<TotalGoods> optionalTotalGoods = totalGoodsRepository.findById(id);
+        if (optionalTotalGoods.isPresent()) {
+            return optionalTotalGoods.get();
+        }
+        throw new ResourceNotFoundException(ErrorCodeEnum.TOTAL_GOODS_QUERY_FAILED_NOT_FOUND);
+    }
+
+    /**
+     * 更新发货单
+     *
+     * @param totalGoods 发货单
+     * @return 更新后的发货单
+     */
+    @Override
+    public TotalGoods updateGoods(TotalGoods totalGoods) {
+        findTotalGoodsById(totalGoods.getId());
+        return totalGoodsRepository.save(totalGoods);
+    }
+
+
+    /**
+     * 上传图片
+     *
+     * @param img        图片
+     * @param id         发货单ID
+     * @param documentNo 发货单序号
+     * @return 更新后发货单
+     * @throws IOException
+     */
+    @Override
+    public TotalGoods imageUpload(MultipartFile img, Long id, String documentNo) throws IOException {
+        TotalGoods oTotalGoods = findTotalGoodsById(id);
+        if (oTotalGoods.getDocumentNo().equals(documentNo)) {
+            String formatDocumentDate = oTotalGoods.getDocumentDate().replace("/", "");
+            String fileName = String.format("%s-%s-%s-%s-%s-%s",
+                    oTotalGoods.getDocumentSeq(),
+                    oTotalGoods.getDocumentNo(),
+                    formatDocumentDate,
+                    oTotalGoods.getUser().getName(),
+                    String.format("%s%s%s%s", oTotalGoods.getAddress(), oTotalGoods.getCount(), oTotalGoods.getProduct().getUnit(), oTotalGoods.getProduct().getName()),
+                    oTotalGoods.getMoney());
+            String suffix = img.getOriginalFilename().substring(img.getOriginalFilename().lastIndexOf("."));
+            fileName += suffix;
+            File nImg = new File(fileConstants.getGoodsPath() + fileName);
+            oTotalGoods.setFileName(fileName);
+            TotalGoods nTotalGoods = updateGoods(oTotalGoods);
+            img.transferTo(nImg);
+            return nTotalGoods;
+        }
+        throw new ParametersIllegalException(ErrorCodeEnum.TOTAL_GOODS_IMG_UPLOAD_FAILED_PARAMETERS_ILLEGAL);
+    }
+
+    @Override
+    public boolean deleteTotalGoodsById(Long id) {
+        if (totalGoodsRepository.deleteTotalGoodsById(id) > 0) {
+            return true;
+        }
+        throw new ResourceNotFoundException(ErrorCodeEnum.TOTAL_GOODS_DELETE_FAILED_NOT_FOUND);
+    }
 }

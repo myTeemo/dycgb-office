@@ -48,3 +48,12 @@ function queryPaymentTypes(url) {
     }
     return paymentTypes;
 }
+
+function queryProducts(url) {
+    let products = [];
+    let result = queryAjaxTemplate(url, 'GET');
+    if (result.code === 12001) {
+        products = result.data;
+    }
+    return products;
+}

@@ -399,9 +399,9 @@
                 });
             },
             "columns": [
+                {"data": "documentDate", "title": "日期", "width": "100px"},
                 {"data": "documentSeq", "title": "本数", "width": "45px"},
                 {"data": "documentNo", "title": "编号", "width": "80px"},
-                {"data": "documentDate", "title": "日期", "width": "100px"},
                 {"data": "category.name", "title": "类别", "width": "50px"},
                 {"data": "user.name", "title": "用户", "width": "80px"},
                 {"data": "content", "title": "摘要", "width": "250px"},
@@ -513,14 +513,6 @@
                         $('#eRemark').val(data.remark);
 
                         let categories = queryCategories(/*[[@{/category}]]*/ "");
-                        $("#eCategory").empty().append($("<option>"));
-                        for (let category of categories) {
-                            let option = $("<option>").val(category.id).text(category.name);
-                            $('#eCategory').append(option);
-                        }
-                        $('#eCategory option').filter(function () {
-                            return $(this).text() === data.category.name;
-                        }).attr("selected", true);
 
                         let users = queryUsers(/*[[@{/user}]]*/ "", {category_id: data.category.id});
                         $("#eUser").empty().append($("<option>"));
@@ -532,14 +524,14 @@
                             return $(this).text() === data.user.name;
                         }).attr("selected", true);
 
-                        let paymentTypes = queryPaymentTypes(/*[[@{/paymentType}]]*/ "",);
-                        $("#ePaymentType").empty().append($("<option>"));
-                        for (let paymentType of paymentTypes) {
-                            let option = $("<option>").val(paymentType.id).text(paymentType.name);
-                            $('#ePaymentType').append(option);
+                        let products = queryProducts(/*[[@{/product}]]*/ "",);
+                        $("#eProduct").empty().append($("<option>"));
+                        for (let product of products) {
+                            let option = $("<option>").val(product.id).text(product.name);
+                            $('#eProduct').append(option);
                         }
-                        $('#ePaymentType option').filter(function () {
-                            return $(this).text() === data.paymentType.name;
+                        $('#eProduct option').filter(function () {
+                            return $(this).text() === data.product.name;
                         }).attr("selected", true);
 
                         $('#eFile').attr('src', (/*[[@{/details/file}]]*/ "") + "/" + id)
@@ -561,7 +553,7 @@
                         html: "<i class='ace-icon fa fa-trash-o bigger-110'></i>&nbsp; 确定",
                         "class": "btn btn-danger btn-minier",
                         click: function () {
-                            let result = deleteDetailsById((/*[[@{/details/}]]*/ "")+id, 'DELETE');
+                            let result = deleteTemplate((/*[[@{/details/}]]*/ "") + id, 'DELETE');
                             $(this).dialog("close");
 
                             $.gritter.add({
@@ -572,7 +564,7 @@
 
                             setTimeout(function () {
                                 window.location.reload();
-                            },2000);
+                            }, 2000);
                         }
                     },
                     {
@@ -612,7 +604,7 @@
             formData.append('remark', $('#remark').val());
             formData.append('file', document.getElementById('eFile-input').files[0]);
 
-            let result = updateDetails(/*[[@{/details}]]*/ "", 'PUT', formData);
+            let result = updateTemplate(/*[[@{/details}]]*/ "", 'PUT', formData);
 
             $.gritter.add({
                 title: result.code + '-' + result.message,
@@ -623,7 +615,7 @@
 
             setTimeout(function () {
                 window.location.reload();
-            },2000);
+            }, 2000);
         }
 
         $('#eFile-input').ace_file_input({

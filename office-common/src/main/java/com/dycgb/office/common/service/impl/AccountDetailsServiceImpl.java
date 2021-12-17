@@ -84,7 +84,7 @@ public class AccountDetailsServiceImpl implements AccountDetailsService {
     @Override
     public Pager<AccountDetails> findAccountDetailsByPage(Integer page, Integer pageSize, Long paymentTypeId) {
         page = page > 0 ? page - 1 : 0;
-        PageRequest pageable = PageRequest.of(page, pageSize, Sort.by("id"));
+        PageRequest pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "id"));
         Page<AccountDetails> p;
         if (paymentTypeId == 0) {
             p = accountDetailsRepository.findAll(pageable);

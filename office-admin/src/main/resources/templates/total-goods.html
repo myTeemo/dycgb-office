@@ -81,6 +81,14 @@
                                 <form class="form-horizontal" role="form">
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label no-padding-right"
+                                               for="documentDate">凭据日期</label>
+                                        <div class="col-sm-9">
+                                            <input readonly="" type="text" class="col-xs-10"
+                                                   id="documentDate"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right"
                                                for="documentSeq">凭据本数</label>
                                         <div class="col-sm-9">
                                             <input readonly="" type="text" class="col-xs-10"
@@ -97,42 +105,51 @@
                                     </div>
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label no-padding-right"
-                                               for="documentDate">凭据日期</label>
+                                               for="user">用户</label>
                                         <div class="col-sm-9">
                                             <input readonly="" type="text" class="col-xs-10"
-                                                   id="documentDate"/>
+                                                   id="user"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right"
+                                               for="p-name">产品</label>
+                                        <div class="col-sm-9">
+                                            <input readonly="" type="text" class="col-xs-10"
+                                                   id="p-name"/>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label no-padding-right"
-                                               for="content">摘要</label>
+                                               for="count">数量</label>
                                         <div class="col-sm-9">
                                             <input readonly="" type="text" class="col-xs-10"
-                                                   id="content"/>
+                                                   id="count"/>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label no-padding-right"
-                                               for="income">收入</label>
+                                               for="p-unit">单位</label>
                                         <div class="col-sm-9">
                                             <input readonly="" type="text" class="col-xs-10"
-                                                   id="income"/>
+                                                   id="p-unit"/>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label no-padding-right"
-                                               for="expense">支出</label>
+                                               for="money">金额</label>
                                         <div class="col-sm-9">
                                             <input readonly="" type="text" class="col-xs-10"
-                                                   id="expense"/>
+                                                   id="money"/>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label no-padding-right"
-                                               for="counterpartyInformation">对方信息</label>
+                                               for="address">工地</label>
                                         <div class="col-sm-9">
                                             <input readonly="" type="text" class="col-xs-10"
-                                                   id="counterpartyInformation"/>
+                                                   id="address"/>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -141,30 +158,6 @@
                                         <div class="col-sm-9">
                                             <textarea class="col-xs-10" id="remark" readonly="" rows="3"
                                                       cols="30"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label no-padding-right"
-                                               for="category">类别</label>
-                                        <div class="col-sm-9">
-                                            <input readonly="" type="text" class="col-xs-10"
-                                                   id="category"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label no-padding-right"
-                                               for="user">用户</label>
-                                        <div class="col-sm-9">
-                                            <input readonly="" type="text" class="col-xs-10"
-                                                   id="user"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label no-padding-right"
-                                               for="paymentType">付款方式</label>
-                                        <div class="col-sm-9">
-                                            <input readonly="" type="text" class="col-xs-10"
-                                                   id="paymentType"/>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -206,6 +199,14 @@
                                     <input type="hidden" id="eId"/>
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label no-padding-right"
+                                               for="eDocumentDate">凭据日期</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="col-xs-10"
+                                                   id="eDocumentDate"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right"
                                                for="eDocumentSeq">凭据本数</label>
                                         <div class="col-sm-9">
                                             <input type="text" class="col-xs-10"
@@ -220,63 +221,7 @@
                                                    id="eDocumentNo"/>
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label no-padding-right"
-                                               for="eDocumentDate">凭据日期</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" class="col-xs-10"
-                                                   id="eDocumentDate"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label no-padding-right"
-                                               for="eContent">摘要</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" class="col-xs-10"
-                                                   id="eContent"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label no-padding-right"
-                                               for="eIncome">收入</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" class="col-xs-10"
-                                                   id="eIncome"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label no-padding-right"
-                                               for="eExpense">支出</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" class="col-xs-10"
-                                                   id="eExpense"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label no-padding-right"
-                                               for="eCounterpartyInformation">对方信息</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" class="col-xs-10"
-                                                   id="eCounterpartyInformation"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label no-padding-right"
-                                               for="eRemark">备注</label>
-                                        <div class="col-sm-9">
-                                            <textarea class="col-xs-10" id="eRemark" rows="3"
-                                                      cols="30"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label no-padding-right"
-                                               for="eCategory">类别</label>
-                                        <div class="col-sm-9">
-                                            <select class="chosen-select col-xs-10" id="eCategory"
-                                                    onchange="queryUsersByCategory()"
-                                                    data-placeholder="请选择分类"></select>
-                                        </div>
-                                    </div>
+
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label no-padding-right"
                                                for="eUser">用户</label>
@@ -287,19 +232,50 @@
                                     </div>
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label no-padding-right"
-                                               for="ePaymentType">付款方式</label>
+                                               for="eProduct">产品</label>
                                         <div class="col-sm-9">
-                                            <select class="chosen-select col-xs-10" id="ePaymentType"
-                                                    data-placeholder="请选择付款方式"></select>
+                                            <select class="chosen-select col-xs-10" id="eProduct"
+                                                    data-placeholder="请选择产品"></select>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label no-padding-right"
-                                               for="eFile">凭据文件</label>
+                                               for="eCount">数量</label>
                                         <div class="col-sm-9">
-                                            <a href="#" class="ace-thumbnails">
-                                                <img width="200" height="100" alt="200x100" src="" id="eFile"/>
-                                            </a>
+                                            <input type="text" class="col-xs-10"
+                                                   id="eCount"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right"
+                                               for="eUnit">单位</label>
+                                        <div class="col-sm-9">
+                                            <input readonly="" type="text" class="col-xs-10"
+                                                   id="eUnit"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right"
+                                               for="eMoney">金额</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="col-xs-10"
+                                                   id="eMoney"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right"
+                                               for="eAddress">工地</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="col-xs-10"
+                                                   id="eAddress"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right"
+                                               for="eRemark">备注</label>
+                                        <div class="col-sm-9">
+                                            <textarea class="col-xs-10" id="eRemark" rows="3"
+                                                      cols="30"></textarea>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -387,7 +363,7 @@
                     },
                     dataType: "json",
                     success: function (result) {
-                        if (result.code === 70001) {
+                        if (result.code === 60001) {
                             callback({
                                 recordsTotal: result.data.total,
                                 recordsFiltered: result.data.total,
@@ -398,21 +374,23 @@
                 });
             },
             "columns": [
-                {"data": "documentSeq", "title": "本数", "width": "45px"},
-                {"data": "documentNo", "title": "编号", "width": "80px"},
-                {"data": "documentDate", "title": "日期", "width": "100px"},
-                {"data": "user.name", "title": "用户", "width": "80px"},
+                {"data": "documentDate", "title": "日期", "width": "50px"},
+                {"data": "documentSeq", "title": "本数", "width": "20px"},
+                {"data": "documentNo", "title": "编号", "width": "50px"},
+                {"data": "user.name", "title": "用户", "width": "50px"},
                 {"data": "product.name", "title": "产品", "width": "80px"},
-                {"data": "count", "title": "数量", "width": "80px"},
-                {"data": "address", "title": "工地", "width": "80px"},
+                {"data": "count", "title": "数量", "width": "20px"},
+                {"data": "product.unit", "title": "单位", "width": "10px"},
                 {
-                    "data": "money", "title": "金额", "width": "90px",
+                    "data": "money", "title": "金额", "width": "80px",
                     "render": function (data, type, row) {
                         if (type === "display" || type === "filter") {
                             return data.toFixed(2);
                         }
                     }
                 },
+                {"data": "address", "title": "工地", "width": "50px"},
+                {"data": "remark", "title": "备注", "width": "100px"},
                 {"data": null, "title": "操作", "width": "100px"},
             ],
             "columnDefs": [
@@ -439,26 +417,25 @@
 
         function query(id) {
             $.ajax({
-                url: (/*[[@{/details}]]*/ "") + "/" + id,
+                url: (/*[[@{/goods}]]*/ "") + "/" + id,
                 type: 'GET',
                 dataType: 'JSON',
                 success: function (result) {
-                    if (result.code === 70001) {
+                    if (result.code === 60011) {
                         $('#query-goods-modal').modal();
                         data = result.data;
                         $('#documentSeq').val(data.documentSeq);
                         $('#documentNo').val(data.documentNo);
                         $('#documentDate').val(data.documentDate);
-                        $('#content').val(data.content);
-                        $('#income').val(data.income);
-                        $('#expense').val(data.expense);
-                        $('#counterpartyInformation').val(data.counterpartyInformation);
+                        $('#p-name').val(data.product.name);
+                        $('#count').val(data.count);
+                        $('#p-unit').val(data.product.unit);
+                        $('#money').val(data.money.toFixed(2));
+                        $('#address').val(data.address);
                         $('#remark').val(data.remark);
-                        $('#category').val(data.category.name);
                         $('#user').val(data.user.name);
-                        $('#paymentType').val(data.paymentType.name);
-                        $('#file').attr('src', (/*[[@{/details/file}]]*/ "") + "/" + id)
-                            .attr('onclick', "imgLightbox.open('" + (/*[[@{/details/file}]]*/ "") + "/" + id + "', true);");
+                        $('#file').attr('src', (/*[[@{/goods/file}]]*/ "") + "/" + id)
+                            .attr('onclick', "imgLightbox.open('" + (/*[[@{/goods/file}]]*/ "") + "/" + id + "', true);");
                     }
                 }
             });
@@ -476,35 +453,24 @@
 
         function edit(id) {
             $.ajax({
-                url: (/*[[@{/details/}]]*/ "") + id,
+                url: (/*[[@{/goods/}]]*/ "") + id,
                 type: 'GET',
                 dataType: 'JSON',
                 success: function (result) {
                     var option;
-                    if (result.code === 70001) {
-                        $('#edit-details-modal').modal();
-                        data = result.data;
+                    if (result.code === 60011) {
+                        $('#edit-goods-modal').modal();
+                        let data = result.data;
                         $('#eId').val(data.id);
+                        $('#eDocumentDate').val(data.documentDate);
                         $('#eDocumentSeq').val(data.documentSeq);
                         $('#eDocumentNo').val(data.documentNo);
-                        $('#eDocumentDate').val(data.documentDate);
-                        $('#eContent').val(data.content);
-                        $('#eIncome').val(data.income);
-                        $('#eExpense').val(data.expense);
-                        $('#eCounterpartyInformation').val(data.counterpartyInformation);
+                        $('#eCount').val(data.count);
+                        $('#eMoney').val(data.money.toFixed(2));
+                        $('#eAddress').val(data.address);
                         $('#eRemark').val(data.remark);
 
-                        let categories = queryCategories(/*[[@{/category}]]*/ "");
-                        $("#eCategory").empty().append($("<option>"));
-                        for (let category of categories) {
-                            let option = $("<option>").val(category.id).text(category.name);
-                            $('#eCategory').append(option);
-                        }
-                        $('#eCategory option').filter(function () {
-                            return $(this).text() === data.category.name;
-                        }).attr("selected", true);
-
-                        let users = queryUsers(/*[[@{/user}]]*/ "", {category_id: data.category.id});
+                        let users = queryUsers(/*[[@{/user}]]*/ "", {category_id: data.user.category.id});
                         $("#eUser").empty().append($("<option>"));
                         for (let user of users) {
                             let option = $("<option>").val(user.id).text(user.name);
@@ -514,18 +480,29 @@
                             return $(this).text() === data.user.name;
                         }).attr("selected", true);
 
-                        let paymentTypes = queryPaymentTypes(/*[[@{/paymentType}]]*/ "",);
-                        $("#ePaymentType").empty().append($("<option>"));
-                        for (let paymentType of paymentTypes) {
-                            let option = $("<option>").val(paymentType.id).text(paymentType.name);
-                            $('#ePaymentType').append(option);
+                        let products = queryProducts(/*[[@{/products}]]*/ "");
+
+                        $("#eProduct").empty().append($("<option>"));
+                        for (let product of products) {
+                            let option = $("<option>").val(product.id).text(product.name);
+                            $('#eProduct').append(option);
                         }
-                        $('#ePaymentType option').filter(function () {
-                            return $(this).text() === data.paymentType.name;
+                        $('#eProduct option').filter(function () {
+                            if ($(this).text() === data.product.name) {
+                                $('#eUnit').val(data.product.unit);
+                                return true;
+                            }
+                            return false;
                         }).attr("selected", true);
 
-                        $('#eFile').attr('src', (/*[[@{/details/file}]]*/ "") + "/" + id)
-                            .attr('onclick', "imgLightbox.open('" + (/*[[@{/details/file}]]*/ "") + "/" + id + "', true);");
+                        $("#eProduct").change(function (evt) {
+                            let name = $("#eProduct option:selected").text();
+                            let product = products.filter(product => product.name === name);
+                            $('#eUnit').val(product[0].unit);
+                        });
+
+                        $('#eFile').attr('src', (/*[[@{/goods/file}]]*/ "") + "/" + id)
+                            .attr('onclick', "imgLightbox.open('" + (/*[[@{/goods/file}]]*/ "") + "/" + id + "', true);");
                     }
                 }
             });
@@ -543,7 +520,7 @@
                         html: "<i class='ace-icon fa fa-trash-o bigger-110'></i>&nbsp; 确定",
                         "class": "btn btn-danger btn-minier",
                         click: function () {
-                            let result = deleteDetailsById((/*[[@{/details/}]]*/ "") + id, 'DELETE');
+                            let result = deleteTemplate((/*[[@{/goods/}]]*/ "") + id, 'DELETE');
                             $(this).dialog("close");
 
                             $.gritter.add({
@@ -584,24 +561,22 @@
             formData.append('documentSeq', $('#eDocumentSeq').val());
             formData.append('documentNo', $('#eDocumentNo').val());
             formData.append('documentDate', $('#eDocumentDate').val());
-            formData.append('category', $('#eCategory option:selected').val());
             formData.append('user', $('#eUser option:selected').val());
-            formData.append('content', $('#eContent').val());
-            formData.append('income', $('#eIncome').val());
-            formData.append('expense', $('#eExpense').val());
-            formData.append('counterpartyInformation', $('#eCounterpartyInformation').val());
-            formData.append('paymentType', $('#ePaymentType option:selected').val());
+            formData.append('product', $('#eProduct option:selected').val());
+            formData.append('count', $('#eCount').val());
+            formData.append('money', $('#eMoney').val());
+            formData.append('address', $('#eAddress').val());
             formData.append('remark', $('#remark').val());
             formData.append('file', document.getElementById('eFile-input').files[0]);
 
-            let result = updateDetails(/*[[@{/details}]]*/ "", 'PUT', formData);
+            let result = updateTemplate(/*[[@{/goods}]]*/ "", 'PUT', formData);
 
             $.gritter.add({
                 title: result.code + '-' + result.message,
                 text: result.message,
                 class_name: 'gritter-success gritter-light'
             });
-            $('#edit-details-modal').modal('hide');
+            $('#edit-goods-modal').modal('hide');
 
             setTimeout(function () {
                 window.location.reload();

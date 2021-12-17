@@ -68,6 +68,13 @@ public enum ErrorCodeEnum {
     TOTAL_GOODS_EXCEL_UPLOAD_FAILED_FILE_NOT_FOUND(60007, "上传账户流水发货Excel文件失败-文件不存在"),
     TOTAL_GOODS_EXCEL_UPLOAD_FAILED_EXCEL_NOT_FOUND(60008, "上传账户流水发货Excel文件失败-文件非.xls或.xlsx"),
     TOTAL_GOODS_EXCEL_UPLOAD_FAILED_IO_EXCEPTION(60009, "上传账户流水发货Excel文件失败-IO异常"),
+    TOTAL_GOODS_QUERY_FAILED_NOT_FOUND(60010, "查询流水发货记录失败-记录不存在"),
+    TOTAL_GOODS_QUERY_OK(60011, "查询流水发货记录成功"),
+    TOTAL_GOODS_IMG_UPLOAD_FAILED_PARAMETERS_ILLEGAL(60012, "发货单图片更新失败-参数非法"),
+    TOTAL_GOODS_IMG_UPLOAD_FAILED_IO_EXCEPTION(60013, "发货单图片更新失败-IO异常"),
+    TOTAL_GOODS_UPLOAD_OK(60014, "发货单更新成功"),
+    TOTAL_GOODS_DELETE_FAILED_NOT_FOUND(60015, "发货单删除失败-发货单不存在"),
+    TOTAL_GOODS_DELETE_OK(60016, "发货单删除成功"),
 
     ACCOUNT_DETAILS_QUERY_OK(70001, "查询账户明细成功"),
     ACCOUNT_DETAILS_QUERY_FAILED_NOT_FOUND(70002, "查询账户明细失败-记录不存在"),
@@ -107,10 +114,12 @@ public enum ErrorCodeEnum {
     MATERIAL_OVERVIEW_CREATE_OK(10002, "材料单预览创建成功"),
     MATERIAL_OVERVIEW_CREATE_FAILED_FILED_ILLEGAL(10002, "材料单预览创建失败-参数非法"),
 
+
     MATERIAL_TYPE_QUERY_OK(11001, "材料类别查询成功"),
     MATERIAL_TYPE_QUERY_FAILED(11001, "材料商类别查询失败-类别不存在"),
     MATERIAL_TYPE_CREATE_OK(11001, "材料类别创建成功"),
 
+    PRODUCT_QUERY_OK(12001, "产品查询成功"),
     ;
 
     private long code;

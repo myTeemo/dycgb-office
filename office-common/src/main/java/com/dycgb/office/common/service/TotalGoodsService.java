@@ -14,4 +14,12 @@ public interface TotalGoodsService {
     List<TotalGoods> createTotalGoodsByExcel(List<ExcelTotalGoods> excelTotalGoodsList);
 
     Pager<TotalGoods> findTotalGoodsByPage(Integer page, Integer pageSize);
+
+    TotalGoods findTotalGoodsById(Long id);
+
+    TotalGoods updateGoods(TotalGoods totalGoods);
+
+    TotalGoods imageUpload(MultipartFile file, Long id, String documentNo) throws IOException;
+
+    boolean deleteTotalGoodsById(Long id);
 }
