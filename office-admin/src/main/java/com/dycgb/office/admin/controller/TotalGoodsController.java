@@ -129,7 +129,7 @@ public class TotalGoodsController {
      * @param id 发货单ID
      * @return 删除结果
      */
-    @DeleteMapping("/id")
+    @DeleteMapping("/{id}")
     @ResponseBody
     public CustomResponse deleteGoodsById(@PathVariable("id") Long id) {
         try {

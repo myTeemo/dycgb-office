@@ -18,6 +18,9 @@
         <link rel="stylesheet" th:href="@{/assets/css/jquery-ui.custom.min.css}"/>
         <link rel="stylesheet" th:href="@{/assets/css/jquery.gritter.min.css}"/>
         <link rel="stylesheet" th:href="@{/assets/css/jquery-ui.min.css}"/>
+        <link rel="stylesheet" th:href="@{/assets/css/bootstrap-datepicker3.min.css}"/>
+        <link rel="stylesheet" th:href="@{/assets/css/chosen.min.css}"/>
+
     </hcss>
     <!-- page specific plugin styles ends-->
 
@@ -46,10 +49,76 @@
 <!-- PAGE CONTENT BEGINS -->
 <pc>
     <div class="page-content">
+
+        <div class="page-header">
+            <h1>
+                查询
+            </h1>
+        </div><!-- /.page-header -->
+
         <div class="row">
             <div class="col-xs-12">
                 <!-- PAGE CONTENT BEGINS -->
+                <div class="row">
+                    <div class="col-xs-12">
 
+                        <form class="form-horizontal" role="form">
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label no-padding-right" for="f-start-date"> 起始日期</label>
+                                <div class="col-sm-3">
+                                    <input type="text" id="f-start-date" placeholder="Username"/>
+                                </div>
+
+                                <label class="col-sm-1 control-label no-padding-right" for="f-end-date"> 截止日期</label>
+                                <div class="col-sm-3">
+                                    <input type="text" id="f-end-date" placeholder="Username"
+                                           class="col-xs-10 col-sm-5"/>
+                                </div>
+
+                                <label class="col-sm-1 control-label no-padding-right" for="f-document-seq"> 本数</label>
+                                <div class="col-sm-3">
+                                    <input type="text" id="f-document-seq" placeholder="Username"/>
+                                </div>
+
+                                <label class="col-sm-1 control-label no-padding-right" for="f-category"> 类别</label>
+                                <div class="col-sm-3">
+                                    <input type="text" id="f-category" placeholder="Username"
+                                           class="col-xs-10 col-sm-5"/>
+                                </div>
+
+                                <label class="col-sm-1 control-label no-padding-right" for="f-user"> 用户</label>
+                                <div class="col-sm-3">
+                                    <input type="text" id="f-user" placeholder="Username"
+                                           class="col-xs-10 col-sm-5"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label no-padding-right" for="f-keys"> 摘要关键词</label>
+                                <div class="col-sm-3">
+                                    <input type="text" id="f-keys" placeholder="Username"
+                                           class="col-xs-10 col-sm-5"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label no-padding-right" for="f-information"> 对方信息</label>
+                                <div class="col-sm-3">
+                                    <input type="text" id="f-information" placeholder="Username"
+                                           class="col-xs-10 col-sm-5"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label no-padding-right" for="f-payment-type">
+                                    付款信息</label>
+                                <div class="col-sm-3">
+                                    <input type="text" id="f-payment-type" placeholder="Username"
+                                           class="col-xs-10 col-sm-5"/>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+                <div class="hr hr-18 dotted hr-double"></div>
                 <div class="row">
                     <div class="col-xs-12">
                         <div class="table-header">
@@ -367,7 +436,9 @@
     <script th:src="@{/assets/js/jquery.gritter.min.js}"></script>
     <script th:src="@{/custom/js/image-light-box.js}"></script>
     <script th:src="@{/assets/js/jquery-ui.min.js}"></script>
+    <script th:src="@{/assets/js/jquery-ui.custom.min.js}"></script>
     <script th:src="@{/assets/js/jquery.ui.touch-punch.min.js}"></script>
+    <script th:src="@{/assets/js/bootstrap-datepicker.min.js}"></script>
     <script th:src="@{/custom/js/query.js}"></script>
     <script th:src="@{/custom/js/update.js}"></script>
 
@@ -630,6 +701,47 @@
             //onchange:''
             //
         });
+
+        //datepicker plugin
+        //link
+        $('.date-picker').datepicker({
+            autoclose: true,
+            todayHighlight: true
+        })
+        //show datepicker when clicking on the icon
+            .next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+
+        if (!ace.vars['touch']) {
+            $('.chosen-select').chosen({allow_single_deselect: true});
+            //resize the chosen on window resize
+
+            $(window)
+                .off('resize.chosen')
+                .on('resize.chosen', function () {
+                    $('.chosen-select').each(function () {
+                        var $this = $(this);
+                        $this.next().css({'width': $this.parent().width()});
+                    })
+                }).trigger('resize.chosen');
+            //resize chosen on sidebar collapse/expand
+            $(document).on('settings.ace.chosen', function (e, event_name, event_val) {
+                if (event_name != 'sidebar_collapsed') return;
+                $('.chosen-select').each(function () {
+                    var $this = $(this);
+                    $this.next().css({'width': $this.parent().width()});
+                })
+            });
+
+
+            $('#chosen-multiple-style .btn').on('click', function (e) {
+                var target = $(this).find('input[type=radio]');
+                var which = parseInt(target.val());
+                if (which == 2) $('#form-field-select-4').addClass('tag-input-style');
+                else $('#form-field-select-4').removeClass('tag-input-style');
+            });
+        }
         /*]]>*/
     </script>
 </bjs>

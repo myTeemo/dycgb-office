@@ -406,7 +406,7 @@
                             '<a class="green" href="javascript:void(0);" onclick="edit(' + data.id + ')">' +
                             '<i class="ace-icon fa fa-pencil bigger-130"></i>' +
                             '</a>' +
-                            '<a class="red" href="javascript:void(0);" onclick="deleteDetails(' + data.id + ')">' +
+                            '<a class="red" href="javascript:void(0);" onclick="deleteGoods(' + data.id + ')">' +
                             '<i class="ace-icon fa fa-trash-o bigger-130"></i>' +
                             '</a>' +
                             '</div>';
@@ -508,12 +508,12 @@
             });
         }
 
-        function deleteDetails(id) {
+        function deleteGoods(id) {
             $("#delete-confirm").removeClass('hide').dialog({
                 resizable: false,
                 width: '320',
                 modal: true,
-                title: "<div class='widget-header'><h4 class='smaller'><i class='ace-icon fa fa-exclamation-triangle red'></i>删除账户明细</h4></div>",
+                title: "<div class='widget-header'><h4 class='smaller'><i class='ace-icon fa fa-exclamation-triangle red'></i>删除发货单</h4></div>",
                 title_html: true,
                 buttons: [
                     {
