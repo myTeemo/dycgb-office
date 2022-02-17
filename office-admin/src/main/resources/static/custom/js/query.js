@@ -57,3 +57,13 @@ function queryProducts(url) {
     }
     return products;
 }
+
+function queryAccountDetails(url, params){
+    let details = [];
+    let result = queryAjaxTemplate(url, 'GET', params);
+
+    if (result.code === 70001) {
+        details = result.data;
+    }
+    return details;
+}

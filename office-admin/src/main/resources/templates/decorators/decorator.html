@@ -431,40 +431,17 @@
                 <b class="arrow"></b>
             </li>
             <li class="">
-                <a href="#" class="dropdown-toggle">
+                <a th:href="@{/details/page}">
                     <i class="menu-icon fa fa-desktop"></i>
-                    <span class="menu-text">
-								账户明细
-							</span>
-                    <b class="arrow fa fa-angle-down"></b>
+                    <span class="menu-text">账户明细</span>
                 </a>
-
-                <b class="arrow"></b>
-
-                <ul class="submenu">
-                    <li class="">
-                        <a th:href="@{/details/page?pid=0}">
-                            流水总账 </a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li class="" th:each="paymentType: ${paymentTypes}">
-                        <a th:href="@{/details/page(pid=${paymentType.id})}" th:text="${paymentType.name}">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            农商行（公账）
-                            <b class="arrow fa fa-angle-down"></b>
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                </ul>
             </li>
 
             <li class="">
                 <a th:href="@{/goods/page}">
                     <i class="menu-icon fa fa-pencil-square-o"></i>
                     <span class="menu-text"> 发货明细 </span>
-                    <b class="arrow fa fa-angle-down"></b>
                 </a>
-                <b class="arrow"></b>
             </li>
             <li class="">
                 <a href="#" class="dropdown-toggle">
@@ -622,7 +599,6 @@
                     </span>
                 </form>
             </div><!-- /.nav-search -->
-
 
 
             <!-- PAGE CONTENT BEGINS -->

@@ -3,6 +3,7 @@ package com.dycgb.office.common.service;
 
 import com.dycgb.office.common.model.AccountDetails;
 import com.dycgb.office.common.model.excel.ExcelAccountDetails;
+import com.dycgb.office.common.model.vo.AccountDetailsVo;
 import com.dycgb.office.common.utils.Pager;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,7 +24,7 @@ public interface AccountDetailsService {
 
     List<AccountDetails> createAccountDetails(List<ExcelAccountDetails> excelAccountDetailsList);
 
-    Pager<AccountDetails> findAccountDetailsByPage(Integer page, Integer pageSize, Long paymentTypeId);
+    Pager<AccountDetails> findAccountDetailsByPage(Integer page, Integer pageSize, AccountDetailsVo accountDetailsVo);
 
     AccountDetails updateAccountDetails(AccountDetails accountDetails);
 

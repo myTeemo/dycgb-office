@@ -1,21 +1,27 @@
 package com.dycgb.office.admin.controller;
 
+import com.dycgb.office.common.model.vo.AccountDetailsVo;
 import com.dycgb.office.common.exception.ParametersIllegalException;
 import com.dycgb.office.common.exception.ResourceAlreadyExistException;
 import com.dycgb.office.common.exception.ResourceNotFoundException;
 import com.dycgb.office.common.model.AccountDetails;
+import com.dycgb.office.common.model.Category;
 import com.dycgb.office.common.model.PaymentType;
+import com.dycgb.office.common.model.User;
 import com.dycgb.office.common.service.AccountDetailsService;
+import com.dycgb.office.common.service.CategoryService;
 import com.dycgb.office.common.service.PaymentTypeService;
+import com.dycgb.office.common.service.UserService;
 import com.dycgb.office.common.utils.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @Description 账户流水明细管理控制器
@@ -24,33 +30,30 @@ import java.io.IOException;
  */
 @Controller
 @RequestMapping("/details")
+@RequiredArgsConstructor
 public class AccountDetailsController {
-    @Resource
-    private AccountDetailsService accountDetailsService;
-    @Resource
-    private PaymentTypeService paymentTypeService;
 
-    @Resource
-    private PageConstants pageConstants;
-
-    @Resource
-    private FileConstants fileConstants;
-
-    @Resource
-    private ImageUtils imageUtils;
+    final AccountDetailsService accountDetailsService;
+    final PaymentTypeService paymentTypeService;
+    final PageConstants pageConstants;
+    final FileConstants fileConstants;
+    final ImageUtils imageUtils;
+    final CategoryService categoryService;
+    final UserService userService;
 
     /**
      * 流水明细查询页面
      */
     @GetMapping("/page")
-    public String page(@RequestParam("pid") Long paymentTypeId, Model model) {
+    public String page(Model model) {
+        List<PaymentType> paymentTypes = paymentTypeService.findAllPaymentTypes();
+        List<User> users = userService.findAllUsers();
+        List<Category> categories = categoryService.findAllCategories();
 
-        if (paymentTypeId == 0) {
-            model.addAttribute("paymentType", new PaymentType(paymentTypeId, "流水总账"));
-        } else {
-            PaymentType paymentType = paymentTypeService.findPaymentTypeById(paymentTypeId);
-            model.addAttribute("paymentType", paymentType);
-        }
+        model.addAttribute("paymentTypes", paymentTypes);
+        model.addAttribute("users", users);
+        model.addAttribute("categories", categories);
+
         return "account-details";
     }
 
@@ -76,16 +79,14 @@ public class AccountDetailsController {
      * @param page     第 page 页
      * @param pageSize 每页数据大小
      */
-    @GetMapping
+    @PostMapping("/page")
     @ResponseBody
-    public CustomResponse findAccountDetailsByPage(@RequestParam(value = "page", defaultValue = "1") Integer page,
-                                                   @RequestParam(value = "pageSize", defaultValue = "20") Integer pageSize,
-                                                   @RequestParam(value = "payId", defaultValue = "0") Long paymentTypeId) {
+    public CustomResponse findAccountDetailsByPage(Integer page, Integer pageSize, AccountDetailsVo accountDetailsVo) {
         if (pageSize == null) {
             pageSize = pageConstants.getPageSize();
         }
 
-        Pager<AccountDetails> accountDetailsList = accountDetailsService.findAccountDetailsByPage(page, pageSize, paymentTypeId);
+        Pager<AccountDetails> accountDetailsList = accountDetailsService.findAccountDetailsByPage(page, pageSize, accountDetailsVo);
         return CustomResponse.OK(ErrorCodeEnum.ACCOUNT_DETAILS_QUERY_OK, accountDetailsList);
     }
 
@@ -179,9 +180,7 @@ public class AccountDetailsController {
      */
     @PostMapping("/img/upload")
     @ResponseBody
-    public CustomResponse imageUpload(@RequestParam("img") MultipartFile img,
-                                      @RequestParam("id") Long id,
-                                      @RequestParam("documentNo") String documentNo) {
+    public CustomResponse imageUpload(@RequestParam("img") MultipartFile img, @RequestParam("id") Long id, @RequestParam("documentNo") String documentNo) {
         try {
             AccountDetails accountDetails = accountDetailsService.imageUpload(img, id, documentNo);
             return CustomResponse.OK(ErrorCodeEnum.ACCOUNT_DETAILS_IMG_UPLOAD_OK, accountDetails.getFileName());

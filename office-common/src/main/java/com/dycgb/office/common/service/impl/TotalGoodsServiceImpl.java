@@ -8,6 +8,7 @@ import com.dycgb.office.common.model.Product;
 import com.dycgb.office.common.model.TotalGoods;
 import com.dycgb.office.common.model.User;
 import com.dycgb.office.common.model.excel.ExcelTotalGoods;
+import com.dycgb.office.common.model.vo.TotalGoodsVo;
 import com.dycgb.office.common.repository.TotalGoodsRepository;
 import com.dycgb.office.common.service.CategoryService;
 import com.dycgb.office.common.service.ProductService;
@@ -20,11 +21,16 @@ import com.dycgb.office.common.utils.excel.TotalGoodsExcelListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -81,6 +87,7 @@ public class TotalGoodsServiceImpl implements TotalGoodsService {
         List<Product> products = productService.findAllProducts();
         List<Category> categories = categoryService.findAllCategories();
 
+        // TODO 用户可能存在于多个类别中需要考虑解决
         for (User user : users) {
             usersMap.put(user.getName(), user);
         }
@@ -132,15 +139,50 @@ public class TotalGoodsServiceImpl implements TotalGoodsService {
     /**
      * 分页查询流水发货明细
      *
-     * @param page     第 page 页
-     * @param pageSize 页大小
+     * @param page         第 page 页
+     * @param pageSize     页大小
+     * @param totalGoodsVo 传入查询条件
      */
     @Override
-    public Pager<TotalGoods> findTotalGoodsByPage(Integer page, Integer pageSize) {
+    public Pager<TotalGoods> findTotalGoodsByPage(Integer page, Integer pageSize, TotalGoodsVo totalGoodsVo) {
         page = page > 0 ? page - 1 : 0;
-        PageRequest pageable = PageRequest.of(page, pageSize, Sort.by("id"));
-        Page<TotalGoods> p = totalGoodsRepository.findAll(pageable);
+        PageRequest pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "documentDate"));
+        Page<TotalGoods> p;
+        if (totalGoodsVo == null) {
+            p = totalGoodsRepository.findAll(pageable);
+        } else {
+            Specification<TotalGoods> specification = new Specification<TotalGoods>() {
+                @Override
+                public Predicate toPredicate(Root<TotalGoods> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                    Predicate predicate = cb.conjunction();
+                    if (totalGoodsVo.getSd() != null && !totalGoodsVo.getSd().trim().equals("")) {
+                        predicate.getExpressions().add(cb.greaterThanOrEqualTo(root.get("documentDate"), totalGoodsVo.getSd()));
+                    }
 
+                    if (totalGoodsVo.getEd() != null && !totalGoodsVo.getEd().trim().equals("")) {
+                        predicate.getExpressions().add(cb.lessThanOrEqualTo(root.get("documentDate"), totalGoodsVo.getEd()));
+                    }
+
+                    if (totalGoodsVo.getUid() != null) {
+                        predicate.getExpressions().add(cb.equal(root.get("user"), totalGoodsVo.getUid()));
+                    }
+
+                    if (totalGoodsVo.getDno() != null && !totalGoodsVo.getDno().trim().equals("")) {
+                        predicate.getExpressions().add(cb.like(root.get("documentNo"), "%" + totalGoodsVo.getDno() + "%"));
+                    }
+
+                    if (totalGoodsVo.getPid() != null) {
+                        predicate.getExpressions().add(cb.equal(root.get("product"), totalGoodsVo.getPid()));
+                    }
+
+                    if (totalGoodsVo.getAddress() != null && !totalGoodsVo.getAddress().trim().equals("")) {
+                        predicate.getExpressions().add(cb.like(root.get("address"), "%" + totalGoodsVo.getAddress() + "%"));
+                    }
+                    return predicate;
+                }
+            };
+            p = totalGoodsRepository.findAll(specification, pageable);
+        }
         return new Pager<>(page == 0 ? 1 : page + 1, p.getSize(), pageable.getOffset(), p.getTotalPages(), p.hasNext(), p.getContent(), p.getTotalElements());
     }
 
@@ -186,13 +228,7 @@ public class TotalGoodsServiceImpl implements TotalGoodsService {
         TotalGoods oTotalGoods = findTotalGoodsById(id);
         if (oTotalGoods.getDocumentNo().equals(documentNo)) {
             String formatDocumentDate = oTotalGoods.getDocumentDate().replace("/", "");
-            String fileName = String.format("%s-%s-%s-%s-%s-%s",
-                    oTotalGoods.getDocumentSeq(),
-                    oTotalGoods.getDocumentNo(),
-                    formatDocumentDate,
-                    oTotalGoods.getUser().getName(),
-                    String.format("%s%s%s%s", oTotalGoods.getAddress(), oTotalGoods.getCount(), oTotalGoods.getProduct().getUnit(), oTotalGoods.getProduct().getName()),
-                    oTotalGoods.getMoney());
+            String fileName = String.format("%s-%s-%s-%s-%s-%s", oTotalGoods.getDocumentSeq(), oTotalGoods.getDocumentNo(), formatDocumentDate, oTotalGoods.getUser().getName(), String.format("%s%s%s%s", oTotalGoods.getAddress(), oTotalGoods.getCount(), oTotalGoods.getProduct().getUnit(), oTotalGoods.getProduct().getName()), oTotalGoods.getMoney());
             String suffix = img.getOriginalFilename().substring(img.getOriginalFilename().lastIndexOf("."));
             fileName += suffix;
             File nImg = new File(fileConstants.getGoodsPath() + fileName);

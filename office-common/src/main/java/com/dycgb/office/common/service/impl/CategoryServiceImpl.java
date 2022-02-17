@@ -99,4 +99,9 @@ public class CategoryServiceImpl implements CategoryService {
         }
         throw new ResourceNotFoundException(ErrorCodeEnum.CATEGORY_DELETE_FAILED_NOT_FOUND.getCode(), ErrorCodeEnum.CATEGORY_DELETE_FAILED_NOT_FOUND.getMessage());
     }
+
+    @Override
+    public Optional<Category> findCategoryByName(String name) {
+        return categoryRepository.findCategoryByName(name);
+    }
 }

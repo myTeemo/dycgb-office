@@ -14,6 +14,8 @@ public interface PaymentTypeRepository extends JpaRepository<PaymentType, Long> 
 
     List<PaymentType> findPaymentTypeByNameLike(String name);
 
+    List<PaymentType> findPaymentTypeByName(String name);
+
     @Modifying
     @Transactional
     Integer deletePaymentTypeById(@NonNull Long id);

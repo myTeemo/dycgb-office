@@ -2,6 +2,7 @@ package com.dycgb.office.common.repository;
 
 import com.dycgb.office.common.model.TotalGoods;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author MY-HE
  * @date 2019-11-30 15:26
  */
-public interface TotalGoodsRepository extends JpaRepository<TotalGoods, Long> {
+public interface TotalGoodsRepository extends JpaRepository<TotalGoods, Long>, JpaSpecificationExecutor<TotalGoods> {
 
     @Transactional
     @Modifying

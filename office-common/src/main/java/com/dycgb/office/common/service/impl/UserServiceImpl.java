@@ -6,12 +6,17 @@ import com.dycgb.office.common.model.User;
 import com.dycgb.office.common.repository.UserRepository;
 import com.dycgb.office.common.service.UserService;
 import com.dycgb.office.common.utils.ErrorCodeEnum;
+import com.dycgb.office.common.utils.SortUtils;
 import lombok.NonNull;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.text.Collator;
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @Description 用户业务逻辑处理实现类
@@ -30,7 +35,8 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public List<User> findUsersByCategory(Category category) {
-        return userRepository.findUsersByCategory(category);
+        List<User> users = userRepository.findUsersByCategory(category);
+        return SortUtils.streamSortByChinese(users, "name");
     }
 
     /**

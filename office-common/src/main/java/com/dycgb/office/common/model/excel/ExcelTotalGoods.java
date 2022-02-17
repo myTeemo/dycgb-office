@@ -25,7 +25,6 @@ public class ExcelTotalGoods {
     private String seq;
     private String number;
     private String userName;
-    private String content;
     private String productName;
     private String unit;
     private String count;
@@ -51,7 +50,6 @@ public class ExcelTotalGoods {
                 .user(user)
                 .product(product)
                 .address(address)
-                .content(content)
                 .count(count != null ? new BigDecimal(count) : null)
                 .money(money != null ? new BigDecimal(money) : null)
                 .remark(remark)

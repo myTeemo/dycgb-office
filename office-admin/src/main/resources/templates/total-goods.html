@@ -13,11 +13,17 @@
                 /*white-space: normal !important;*/
                 height: auto;
             }
+
+            form .table tbody tr td {
+                vertical-align: middle;
+                border: 0;
+            }
         </style>
         <link th:href="@{/custom/css/image-light-box.css}" rel="stylesheet" type="text/css">
         <link rel="stylesheet" th:href="@{/assets/css/jquery-ui.custom.min.css}"/>
         <link rel="stylesheet" th:href="@{/assets/css/jquery.gritter.min.css}"/>
         <link rel="stylesheet" th:href="@{/assets/css/jquery-ui.min.css}"/>
+        <link rel="stylesheet" th:href="@{/assets/css/bootstrap-datepicker3.min.css}"/>
     </hcss>
     <!-- page specific plugin styles ends-->
 
@@ -48,6 +54,80 @@
         <div class="row">
             <div class="col-xs-12">
                 <!-- PAGE CONTENT BEGINS -->
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <form class="form-horizontal" role="form">
+                            <table th:border="0" class="table text-right table-responsive">
+                                <tr>
+                                    <td>起始日期：</td>
+                                    <td>
+                                        <div class="input-group">
+                                            <input class="form-control date-picker" id="f-start-date" type="text"/>
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-calendar bigger-110"></i>
+                                            </span>
+                                        </div>
+                                    </td>
+
+                                    <td>截止日期：</td>
+                                    <td>
+                                        <div class="input-group">
+                                            <input class="form-control date-picker" id="f-end-date" type="text"/>
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-calendar bigger-110"></i>
+                                            </span>
+                                        </div>
+                                    </td>
+
+                                    <td>用户：</td>
+                                    <td>
+                                        <select class="form-control" id="f-user">
+                                            <option></option>
+                                            <option th:each="user: ${users}" th:value="${user.id}"
+                                                    th:text="${user.name}"></option>
+                                        </select>
+                                    </td>
+
+                                    <td>
+                                        <button class="btn" type="reset">
+                                            <i class="ace-icon fa fa-undo"></i>
+                                            重置
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>凭据编号：</td>
+                                    <td>
+                                        <input class="form-control" type="text" id="f-document-no"
+                                               placeholder="输入票号后4位即可"/>
+                                    </td>
+
+                                    <td>产品：</td>
+                                    <td>
+                                        <select class="form-control" id="f-product">
+                                            <option></option>
+                                            <option th:each="product: ${products}" th:value="${product.id}"
+                                                    th:text="${product.name}"></option>
+                                        </select>
+                                    </td>
+
+                                    <td>工地：</td>
+                                    <td><input class="form-control" type="text" id="f-address" placeholder="工地"/>
+                                    </td>
+
+                                    <td>
+                                        <button class="btn btn-success" id="f-btn-query" type="button">
+                                            <i class="ace-icon fa fa-check"></i>
+                                            查询
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                    </div>
+                </div>
 
                 <div class="row">
                     <div class="col-xs-12">
@@ -343,7 +423,10 @@
     <script th:src="@{/assets/js/jquery.gritter.min.js}"></script>
     <script th:src="@{/custom/js/image-light-box.js}"></script>
     <script th:src="@{/assets/js/jquery-ui.min.js}"></script>
+    <script th:src="@{/assets/js/jquery-ui.custom.min.js}"></script>
     <script th:src="@{/assets/js/jquery.ui.touch-punch.min.js}"></script>
+    <script th:src="@{/assets/js/bootstrap-datepicker.min.js}"></script>
+    <script th:src="@{/assets/js/bootstrap-datepicker.zh-CN.min.js}"></script>
     <script th:src="@{/custom/js/query.js}"></script>
     <script th:src="@{/custom/js/update.js}"></script>
 
@@ -354,12 +437,26 @@
             "ajax": function (data, callback, settings) {
                 const pageSize = data.length;
                 const page = data.start / data.length + 1;
+
+                let sd = $("#f-start-date").val();
+                let ed = $("#f-end-date").val();
+                let uid = $("#f-user").val();
+                let dno = $("#f-document-no").val();
+                let pid = $("#f-product").val();
+                let address = $("#f-address").val();
+
                 $.ajax({
-                    type: "GET",
-                    url: /*[[@{/goods}]]*/ "",
+                    type: "POST",
+                    url: /*[[@{/goods/page}]]*/ "",
                     data: {
                         page: page,
                         pageSize: pageSize,
+                        sd: sd,
+                        ed: ed,
+                        uid: uid,
+                        dno: dno,
+                        pid: pid,
+                        address: address
                     },
                     dataType: "json",
                     success: function (result) {
@@ -414,6 +511,10 @@
                 }
             ]
         }));
+
+        $("#f-btn-query").click(function () {
+            $("#goods-table").dataTable().api().ajax.reload();
+        });
 
         function query(id) {
             $.ajax({
@@ -595,6 +696,18 @@
             //onchange:''
             //
         });
+
+        //datepicker plugin
+        //link
+        $('.date-picker').datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            language: 'zh-CN',
+            format: "yyyy/mm/dd",
+        }).next().on(ace.click_event, function () {
+            $(this).prev().focus(); //show datepicker when clicking on the icon
+        });
+
         /*]]>*/
     </script>
 </bjs>

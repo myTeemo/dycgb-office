@@ -4,6 +4,7 @@ import com.dycgb.office.common.model.Category;
 import org.springframework.lang.NonNull;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CategoryService {
     Category updateCategory(Category category);
@@ -15,4 +16,6 @@ public interface CategoryService {
     Category findCategoryById(@NonNull Long id);
 
     boolean deleteCategoryById(Long id);
+
+    Optional<Category> findCategoryByName(String name);
 }

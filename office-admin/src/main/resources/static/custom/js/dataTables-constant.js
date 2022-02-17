@@ -8,10 +8,7 @@ const CONSTANT = {
                 "emptyTable": "无数据可用",
                 "zeroRecords": "无数据显示",
                 "paginate": {
-                    "first": "首页",
-                    "last": "尾页",
-                    "next": "下一页",
-                    "previous": "上一页"
+                    "first": "首页", "last": "尾页", "next": "下一页", "previous": "上一页"
                 }
             },
             searching: false,
@@ -29,9 +26,8 @@ const CONSTANT = {
             processing: true,
             rowId: "id",
             serverSide: true,
-            destroy:true
-        },
-        COLUMN: {
+            destroy: true
+        }, COLUMN: {
             // 复选框
             CHECKBOX: {
                 className: "td-checkbox",

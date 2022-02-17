@@ -9,6 +9,7 @@ import com.dycgb.office.common.model.Category;
 import com.dycgb.office.common.model.PaymentType;
 import com.dycgb.office.common.model.User;
 import com.dycgb.office.common.model.excel.ExcelAccountDetails;
+import com.dycgb.office.common.model.vo.AccountDetailsVo;
 import com.dycgb.office.common.repository.AccountDetailsRepository;
 import com.dycgb.office.common.service.AccountDetailsService;
 import com.dycgb.office.common.service.CategoryService;
@@ -23,12 +24,17 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 
 import javax.annotation.Resource;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -76,24 +82,59 @@ public class AccountDetailsServiceImpl implements AccountDetailsService {
     /**
      * 分页查询账户流水明细
      *
-     * @param page          第 page 页
-     * @param pageSize      每页大小
-     * @param paymentTypeId 付款方式
+     * @param page             第 page 页
+     * @param pageSize         每页大小
+     * @param accountDetailsVo 查询条件
      * @return 分页列表
      */
     @Override
-    public Pager<AccountDetails> findAccountDetailsByPage(Integer page, Integer pageSize, Long paymentTypeId) {
+    public Pager<AccountDetails> findAccountDetailsByPage(Integer page, Integer pageSize, AccountDetailsVo accountDetailsVo) {
         page = page > 0 ? page - 1 : 0;
-        PageRequest pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "id"));
+        PageRequest pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "documentDate"));
         Page<AccountDetails> p;
-        if (paymentTypeId == 0) {
+        if (accountDetailsVo == null) {
             p = accountDetailsRepository.findAll(pageable);
         } else {
-            PaymentType paymentType = new PaymentType();
-            paymentType.setId(paymentTypeId);
-            AccountDetails accountDetails = AccountDetails.builder().paymentType(paymentType).build();
-            Example<AccountDetails> example = Example.of(accountDetails);
-            p = accountDetailsRepository.findAll(example, pageable);
+            Specification<AccountDetails> specification = new Specification() {
+                @Override
+                public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+                    Predicate predicate = cb.conjunction();
+                    if (accountDetailsVo.getSd() != null && !accountDetailsVo.getSd().trim().equals("")) {
+                        predicate.getExpressions().add(cb.greaterThanOrEqualTo(root.get("documentDate").as(String.class), accountDetailsVo.getSd()));
+                    }
+
+                    if (accountDetailsVo.getEd() != null && !accountDetailsVo.getEd().trim().equals("")) {
+                        predicate.getExpressions().add(cb.lessThanOrEqualTo(root.get("documentDate").as(String.class), accountDetailsVo.getEd()));
+                    }
+
+                    if (accountDetailsVo.getCid() != null) {
+                        predicate.getExpressions().add(cb.equal(root.get("category"), accountDetailsVo.getCid()));
+                    }
+
+                    if (accountDetailsVo.getUid() != null) {
+                        predicate.getExpressions().add(cb.equal(root.get("user"), accountDetailsVo.getUid()));
+                    }
+
+                    if (accountDetailsVo.getPayId() != null) {
+                        predicate.getExpressions().add(cb.equal(root.get("paymentType"), accountDetailsVo.getPayId()));
+                    }
+
+                    if (accountDetailsVo.getDno() != null && !accountDetailsVo.getDno().trim().equals("")) {
+                        predicate.getExpressions().add(cb.like(root.get("documentNo"), "%" + accountDetailsVo.getDno() + "%"));
+                    }
+
+                    if (accountDetailsVo.getKeys() != null && !accountDetailsVo.getKeys().trim().equals("")) {
+                        predicate.getExpressions().add(cb.like(root.get("content"), "%" + accountDetailsVo.getKeys() + "%"));
+                    }
+
+                    if (accountDetailsVo.getInfo() != null && !accountDetailsVo.getInfo().trim().equals("")) {
+                        predicate.getExpressions().add(cb.like(root.get("counterpartyInformation"), "%" + accountDetailsVo.getInfo() + "%"));
+                    }
+
+                    return predicate;
+                }
+            };
+            p = accountDetailsRepository.findAll(specification, pageable);
         }
         return new Pager<>(page == 0 ? 1 : page + 1, p.getSize(), pageable.getOffset(), p.getTotalPages(), p.hasNext(), p.getContent(), p.getTotalElements());
     }
@@ -106,10 +147,7 @@ public class AccountDetailsServiceImpl implements AccountDetailsService {
      */
     @Override
     public AccountDetails createAccountDetails(AccountDetails accountDetails) {
-        List<AccountDetails> accountDetailsList = accountDetailsRepository.findAccountDetailsByDocumentSeqAndDocumentNoAndDocumentDate(
-                accountDetails.getDocumentSeq(),
-                accountDetails.getDocumentNo(),
-                accountDetails.getDocumentDate());
+        List<AccountDetails> accountDetailsList = accountDetailsRepository.findAccountDetailsByDocumentSeqAndDocumentNoAndDocumentDate(accountDetails.getDocumentSeq(), accountDetails.getDocumentNo(), accountDetails.getDocumentDate());
         if (accountDetailsList.isEmpty()) {
             return accountDetailsRepository.save(accountDetails);
         }
@@ -229,13 +267,7 @@ public class AccountDetailsServiceImpl implements AccountDetailsService {
         if (oAccountDetails.getDocumentNo().equals(documentNo)) {
             String formatDocumentDate = oAccountDetails.getDocumentDate().replace("/", "");
 
-            String fileName = String.format("%s-%s-%s-%s-%s-%s",
-                    oAccountDetails.getDocumentSeq(),
-                    oAccountDetails.getDocumentNo(),
-                    formatDocumentDate,
-                    oAccountDetails.getUser().getName(),
-                    oAccountDetails.getContent(),
-                    oAccountDetails.getIncome().compareTo(BigDecimal.ZERO) == 0 ? oAccountDetails.getExpense() : oAccountDetails.getIncome());
+            String fileName = String.format("%s-%s-%s-%s-%s-%s", oAccountDetails.getDocumentSeq(), oAccountDetails.getDocumentNo(), formatDocumentDate, oAccountDetails.getUser().getName(), oAccountDetails.getContent(), oAccountDetails.getIncome().compareTo(BigDecimal.ZERO) == 0 ? oAccountDetails.getExpense() : oAccountDetails.getIncome());
             String suffix = img.getOriginalFilename().substring(img.getOriginalFilename().lastIndexOf("."));
             fileName += suffix;
             File nImg = new File(fileConstants.getAccountDetailsPath() + fileName);

@@ -57,7 +57,7 @@ public class PaymentTypeServiceImpl implements PaymentTypeService {
     @Override
     public PaymentType createPaymentType(PaymentType paymentType) {
 
-        List<PaymentType> paymentTypes = paymentTypeRepository.findPaymentTypeByNameLike("%" + paymentType.getName() + "%");
+        List<PaymentType> paymentTypes = paymentTypeRepository.findPaymentTypeByName(paymentType.getName());
         if (paymentTypes.isEmpty()) {
             return paymentTypeRepository.save(paymentType);
         }

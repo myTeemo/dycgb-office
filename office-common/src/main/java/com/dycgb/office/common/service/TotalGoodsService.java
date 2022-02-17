@@ -2,6 +2,7 @@ package com.dycgb.office.common.service;
 
 import com.dycgb.office.common.model.TotalGoods;
 import com.dycgb.office.common.model.excel.ExcelTotalGoods;
+import com.dycgb.office.common.model.vo.TotalGoodsVo;
 import com.dycgb.office.common.utils.Pager;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,7 +14,7 @@ public interface TotalGoodsService {
 
     List<TotalGoods> createTotalGoodsByExcel(List<ExcelTotalGoods> excelTotalGoodsList);
 
-    Pager<TotalGoods> findTotalGoodsByPage(Integer page, Integer pageSize);
+    Pager<TotalGoods> findTotalGoodsByPage(Integer page, Integer pageSize, TotalGoodsVo totalGoodsVo);
 
     TotalGoods findTotalGoodsById(Long id);
 

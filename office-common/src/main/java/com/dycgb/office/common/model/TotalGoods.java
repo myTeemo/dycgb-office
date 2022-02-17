@@ -49,12 +49,6 @@ public class TotalGoods extends AbstractBaseEntity {
     private User user;
 
     /**
-     * 凭证内容
-     */
-    @Column
-    private String content;
-
-    /**
      * 产品
      */
     @ManyToOne
@@ -76,7 +70,7 @@ public class TotalGoods extends AbstractBaseEntity {
     /**
      * 凭证金额
      */
-    @Column(nullable = false, scale = 2, precision = 20)
+    @Column(scale = 2, precision = 20)
     private BigDecimal money;
 
     /**

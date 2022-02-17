@@ -2,17 +2,29 @@ package com.dycgb.office.admin.controller;
 
 import com.dycgb.office.common.exception.ParametersIllegalException;
 import com.dycgb.office.common.exception.ResourceNotFoundException;
+import com.dycgb.office.common.model.Category;
+import com.dycgb.office.common.model.Product;
 import com.dycgb.office.common.model.TotalGoods;
+import com.dycgb.office.common.model.User;
+import com.dycgb.office.common.model.vo.TotalGoodsVo;
+import com.dycgb.office.common.service.CategoryService;
+import com.dycgb.office.common.service.ProductService;
 import com.dycgb.office.common.service.TotalGoodsService;
+import com.dycgb.office.common.service.UserService;
 import com.dycgb.office.common.utils.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * @Description 流水发货控制器
@@ -21,20 +33,27 @@ import java.io.IOException;
  */
 @Controller
 @RequestMapping("/goods")
+@RequiredArgsConstructor
 public class TotalGoodsController {
-    private final TotalGoodsService totalGoodsService;
-    private final ImageUtils imageUtils;
-    private final FileConstants fileConstants;
-
-    @Autowired
-    public TotalGoodsController(TotalGoodsService totalGoodsService, ImageUtils imageUtils, FileConstants fileConstants) {
-        this.totalGoodsService = totalGoodsService;
-        this.imageUtils = imageUtils;
-        this.fileConstants = fileConstants;
-    }
+    final TotalGoodsService totalGoodsService;
+    final ImageUtils imageUtils;
+    final FileConstants fileConstants;
+    final UserService userService;
+    final CategoryService categoryService;
+    final ProductService productService;
 
     @GetMapping("/page")
-    public String page() {
+    public String page(Model model) {
+        Optional<Category> category = categoryService.findCategoryByName("客户");
+        if (category.isPresent()) {
+            List<User> users = userService.findUsersByCategory(category.get());
+            model.addAttribute("users", users);
+        } else {
+            model.addAttribute("users", new ArrayList<User>());
+        }
+        List<Product> products = productService.findAllProducts();
+        model.addAttribute("products", products);
+
         return "total-goods";
     }
 
@@ -44,16 +63,15 @@ public class TotalGoodsController {
      * @param page     第 page 页
      * @param pageSize 页大小
      */
-    @GetMapping
+    @PostMapping("/page")
     @ResponseBody
-    public CustomResponse findTotalGoodsByPage(@RequestParam(value = "page", defaultValue = "1") Integer page,
-                                               @RequestParam(value = "pageSize", defaultValue = "20") Integer pageSize) {
-        Pager<TotalGoods> totalGoodsPager = totalGoodsService.findTotalGoodsByPage(page, pageSize);
+    public CustomResponse findTotalGoodsByPage(Integer page, Integer pageSize, TotalGoodsVo totalGoodsVo) {
+        Pager<TotalGoods> totalGoodsPager = totalGoodsService.findTotalGoodsByPage(page, pageSize, totalGoodsVo);
         return CustomResponse.OK(ErrorCodeEnum.TOTAL_GOODS_QUERY_BY_PAGE_OK, totalGoodsPager);
     }
 
 
-    @PostMapping("/upload")
+    @PostMapping("/excel/upload")
     @ResponseBody
     public CustomResponse excelUpload(@RequestParam("file") MultipartFile file) {
         try {
@@ -95,9 +113,7 @@ public class TotalGoodsController {
 
     @PostMapping("/img/upload")
     @ResponseBody
-    public CustomResponse imageUpload(@RequestParam("img") MultipartFile img,
-                                      @RequestParam("id") Long id,
-                                      @RequestParam("documentNo") String documentNo) {
+    public CustomResponse imageUpload(@RequestParam("img") MultipartFile img, @RequestParam("id") Long id, @RequestParam("documentNo") String documentNo) {
         return null;
     }
 

@@ -3,6 +3,8 @@ package com.dycgb.office.common.service.impl;
 import com.dycgb.office.common.model.Product;
 import com.dycgb.office.common.repository.ProductRepository;
 import com.dycgb.office.common.service.ProductService;
+import com.dycgb.office.common.utils.SortUtils;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -20,7 +22,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> findAllProducts() {
-        return productRepository.findAll();
+        List<Product> products = productRepository.findAll();
+        return SortUtils.streamSortByChinese(products, "name");
     }
 
     @Override

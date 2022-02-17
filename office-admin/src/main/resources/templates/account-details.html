@@ -13,6 +13,12 @@
                 /*white-space: normal !important;*/
                 height: auto;
             }
+
+            form .table tbody tr td {
+                vertical-align: middle;
+                border: 0;
+            }
+
         </style>
         <link th:href="@{/custom/css/image-light-box.css}" rel="stylesheet" type="text/css">
         <link rel="stylesheet" th:href="@{/assets/css/jquery-ui.custom.min.css}"/>
@@ -40,7 +46,6 @@
                 <i class="ace-icon fa fa-home home-icon"></i>
                 <a href="#">账户明细</a>
             </li>
-            <li class="active">[[${paymentType.name}]]</li>
         </ul><!-- /.breadcrumb -->
     </div>
 </bc>
@@ -49,83 +54,97 @@
 <!-- PAGE CONTENT BEGINS -->
 <pc>
     <div class="page-content">
-
-        <div class="page-header">
-            <h1>
-                查询
-            </h1>
-        </div><!-- /.page-header -->
-
         <div class="row">
             <div class="col-xs-12">
                 <!-- PAGE CONTENT BEGINS -->
                 <div class="row">
                     <div class="col-xs-12">
-
                         <form class="form-horizontal" role="form">
-                            <div class="form-group">
-                                <label class="col-sm-1 control-label no-padding-right" for="f-start-date"> 起始日期</label>
-                                <div class="col-sm-3">
-                                    <input type="text" id="f-start-date" placeholder="Username"/>
-                                </div>
+                            <table th:border="0" class="table text-right table-responsive">
+                                <tr>
+                                    <td>起始日期：</td>
+                                    <td>
+                                        <div class="input-group">
+                                            <input class="form-control date-picker" id="f-start-date" type="text"/>
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-calendar bigger-110"></i>
+                                            </span>
+                                        </div>
+                                    </td>
 
-                                <label class="col-sm-1 control-label no-padding-right" for="f-end-date"> 截止日期</label>
-                                <div class="col-sm-3">
-                                    <input type="text" id="f-end-date" placeholder="Username"
-                                           class="col-xs-10 col-sm-5"/>
-                                </div>
+                                    <td>截止日期：</td>
+                                    <td>
+                                        <div class="input-group">
+                                            <input class="form-control date-picker" id="f-end-date" type="text"/>
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-calendar bigger-110"></i>
+                                            </span>
+                                        </div>
+                                    </td>
 
-                                <label class="col-sm-1 control-label no-padding-right" for="f-document-seq"> 本数</label>
-                                <div class="col-sm-3">
-                                    <input type="text" id="f-document-seq" placeholder="Username"/>
-                                </div>
+                                    <td>类别：</td>
+                                    <td>
+                                        <select class="form-control" id="f-category">
+                                            <option></option>
+                                            <option th:each="category: ${categories}" th:value="${category.id}"
+                                                    th:text="${category.name}"/>
+                                        </select>
+                                    </td>
 
-                                <label class="col-sm-1 control-label no-padding-right" for="f-category"> 类别</label>
-                                <div class="col-sm-3">
-                                    <input type="text" id="f-category" placeholder="Username"
-                                           class="col-xs-10 col-sm-5"/>
-                                </div>
+                                    <td>用户：</td>
+                                    <td>
+                                        <select class="form-control" id="f-user">
+                                            <option></option>
+                                            <option th:each="user: ${users}" th:value="${user.id}"
+                                                    th:text="${user.name}"/>
+                                        </select>
+                                    </td>
 
-                                <label class="col-sm-1 control-label no-padding-right" for="f-user"> 用户</label>
-                                <div class="col-sm-3">
-                                    <input type="text" id="f-user" placeholder="Username"
-                                           class="col-xs-10 col-sm-5"/>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-1 control-label no-padding-right" for="f-keys"> 摘要关键词</label>
-                                <div class="col-sm-3">
-                                    <input type="text" id="f-keys" placeholder="Username"
-                                           class="col-xs-10 col-sm-5"/>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-1 control-label no-padding-right" for="f-information"> 对方信息</label>
-                                <div class="col-sm-3">
-                                    <input type="text" id="f-information" placeholder="Username"
-                                           class="col-xs-10 col-sm-5"/>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-1 control-label no-padding-right" for="f-payment-type">
-                                    付款信息</label>
-                                <div class="col-sm-3">
-                                    <input type="text" id="f-payment-type" placeholder="Username"
-                                           class="col-xs-10 col-sm-5"/>
-                                </div>
-                            </div>
+                                    <td>
+                                        <button class="btn" type="reset">
+                                            <i class="ace-icon fa fa-undo"></i>
+                                            重置
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <tr>
+
+                                    <td>凭据编号：</td>
+                                    <td>
+                                        <input class="form-control" type="text" id="f-document-no"
+                                               placeholder="输入票号后4位即可"/>
+                                    </td>
+
+                                    <td>摘要关键词：</td>
+                                    <td><input class="form-control" type="text" id="f-keys" placeholder="摘要关键词"/></td>
+
+                                    <td>对方信息：</td>
+                                    <td><input class="form-control" type="text" id="f-information" placeholder="对方信息"/>
+                                    </td>
+
+                                    <td>付款信息：</td>
+                                    <td>
+                                        <select class="form-control" id="f-payment-type">
+                                            <option></option>
+                                            <option th:each="paymentType: ${paymentTypes}" th:value="${paymentType.id}"
+                                                    th:text="${paymentType.name}"/>
+                                        </select>
+                                    </td>
+
+                                    <td>
+                                        <button class="btn btn-success" id="f-btn-query" type="button">
+                                            <i class="ace-icon fa fa-check"></i>
+                                            查询
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
                         </form>
-
                     </div>
                 </div>
-                <div class="hr hr-18 dotted hr-double"></div>
                 <div class="row">
                     <div class="col-xs-12">
-                        <div class="table-header">
-                            账户明细-[[${paymentType.name}]]
-                        </div>
-                        <!-- div.table-responsive -->
-
                         <!-- div.dataTables_borderWrap -->
                         <div>
                             <table id="szrcb-details-table"
@@ -439,6 +458,7 @@
     <script th:src="@{/assets/js/jquery-ui.custom.min.js}"></script>
     <script th:src="@{/assets/js/jquery.ui.touch-punch.min.js}"></script>
     <script th:src="@{/assets/js/bootstrap-datepicker.min.js}"></script>
+    <script th:src="@{/assets/js/bootstrap-datepicker.zh-CN.min.js}"></script>
     <script th:src="@{/custom/js/query.js}"></script>
     <script th:src="@{/custom/js/update.js}"></script>
 
@@ -448,15 +468,33 @@
         $("#szrcb-details-table").dataTable($.extend(true, {}, CONSTANT.DATA_TABLES.DEFAULT_OPTION, {
             "ajax": function (data, callback, settings) {
                 const pageSize = data.length;
-                const page = data.start / data.length + 1;
+                const page = data.start / data.length + 1
+
+                let sd = $("#f-start-date").val();
+                let ed = $("#f-end-date").val();
+                let cid = $("#f-category").val();
+                let uid = $("#f-user").val();
+                let dno = $("#f-document-no").val();
+                let keys = $("#f-keys").val();
+                let info = $("#f-information").val();
+                let payId = $("#f-payment-type").val();
+
+                let params = {
+                    "sd": sd,
+                    "ed": ed,
+                    "cid": cid,
+                    "uid": uid,
+                    "dno": dno,
+                    "keys": keys,
+                    "info": info,
+                    "payId": payId,
+                    "page": page,
+                    "pageSize": pageSize
+                };
                 $.ajax({
-                    type: "GET",
-                    url:/*[[@{/details}]]*/ "",
-                    data: {
-                        page: page,
-                        pageSize: pageSize,
-                        payId: /*[[${paymentType.id}]]*/ 0
-                    },
+                    type: "POST",
+                    url:/*[[@{/details/page}]]*/ "",
+                    data: params,
                     dataType: "json",
                     success: function (result) {
                         if (result.code === 70001) {
@@ -525,6 +563,21 @@
                 }
             ]
         }));
+
+        $("#f-category").change(function () {
+            let categoryId = $(this).val();
+            let users = queryUsers(/*[[@{/user}]]*/ "", {category_id: categoryId});
+            $("#f-user").empty().append($("<option>"));
+            for (let user of users) {
+                let option = $("<option>").val(user.id).text(user.name);
+                $('#f-user').append(option);
+            }
+        });
+
+        $("#f-btn-query").click(function () {
+
+            $("#szrcb-details-table").dataTable().api().ajax.reload();
+        });
 
         function query(id) {
             $.ajax({
@@ -706,11 +759,11 @@
         //link
         $('.date-picker').datepicker({
             autoclose: true,
-            todayHighlight: true
-        })
-        //show datepicker when clicking on the icon
-            .next().on(ace.click_event, function () {
-            $(this).prev().focus();
+            todayHighlight: true,
+            language: 'zh-CN',
+            format: "yyyy/mm/dd",
+        }).next().on(ace.click_event, function () {
+            $(this).prev().focus(); //show datepicker when clicking on the icon
         });
 
         if (!ace.vars['touch']) {
